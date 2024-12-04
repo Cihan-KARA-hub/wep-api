@@ -1,0 +1,27 @@
+services:
+  advertisement-db:
+    image: postgres
+    volumes:
+      - advertisement_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${ANOTHER_POSTGRES_DB}
+      POSTGRES_USER: ${ANOTHER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ANOTHER_POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+  blog-db:
+    image: postgres
+    volumes:
+      - blog_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${BLOG_POSTGRES_DB}
+      POSTGRES_USER: ${BLOG_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${BLOG_POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+
+volumes:
+  advertisement_postgres_data:
+    driver: local
+  blog_postgres_data:
+    driver: local

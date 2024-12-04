@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 7
+      author: user
+      changes:
+        - createTable:
+            tableName: blogs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: meta_description
+                  type: VARCHAR(155)
+              - column:
+                  name: title
+                  type: VARCHAR(60)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_blogs_users
+                    references: users(id)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: slug
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: reading_second
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: read_count
+                  type: int
+              - column:
+                  name: is_blog_active
+                  type: VARCHAR(10)
+              - column:
+                  name: blog_category_ids
+                  type: BIGINT
+              - column:
+                  name: sun_blog_category_ids
+                  type: BIGINT
+
+
