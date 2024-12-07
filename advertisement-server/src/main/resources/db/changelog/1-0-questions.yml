@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 6
+      id: 7
       author: user
       changes:
         - createTable:
@@ -29,8 +29,8 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_questions_ads
-                    references: ads(id)
+                    foreignKeyName: fk_questions_advertisement
+                    references: advertisement(id)
               - column:
                   name: created_at
                   type: TIMESTAMP

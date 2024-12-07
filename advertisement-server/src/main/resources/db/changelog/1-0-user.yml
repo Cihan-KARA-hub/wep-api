@@ -57,7 +57,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 9
+      id: 4
       author: user
       changes:
         - createTable:

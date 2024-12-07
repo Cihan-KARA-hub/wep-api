@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/1-0-categories.yml
+  - include:
+      file: db/changelog/1-0-user.yml
+  - include:
+      file: db/changelog/1-0-stores.yml
+  - include:
+      file: db/changelog/1-0-advertisement.yml
+  - include:
+      file: db/changelog/1-0-questions.yml
+  - include:
+      file: db/changelog/1-1-blog_categories.yml
+  - include:
+      file: db/changelog/1-1-blogs.yml
+  - include:
+      file: db/changelog/1-1-blog_comment.yml
+  - include:
+      file: db/changelog/1-2-adver_category.yml
+
+
+
+
+
+
+

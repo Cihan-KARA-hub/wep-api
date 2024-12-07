@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Set;
 
 
-@Data
+
 @Entity
 @Table(name = "users")
 @Builder

@@ -1,5 +1,6 @@
 package com.yelman.blogservices.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 
-@Data
+
 @Entity
 @Table(name = "users")
 @Builder
@@ -29,19 +30,19 @@ public class User {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
-
+    @JsonIgnore
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
-
+    @JsonIgnore
     @Column(name = "account_non_expired", nullable = false)
     private boolean accountNonExpired;
-
+    @JsonIgnore
     @Column(name = "account_non_locked", nullable = false)
     private boolean accountNonLocked;
-
+    @JsonIgnore
     @Column(name = "credentials_non_expired", nullable = false)
     private boolean credentialsNonExpired;
 

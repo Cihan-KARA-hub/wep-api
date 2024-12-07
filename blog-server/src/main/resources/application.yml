@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: blog-server
   cloud:
     config:
       enabled: false
@@ -9,7 +11,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -20,13 +22,12 @@ spring:
   sql:
     init:
       platform: postgres
-
-
 server:
   port: 8085  # Uygulama portu
 
 logging:
   level:
+    liquibase: DEBUG
     org.hibernate.SQL: DEBUG  # Hibernate SQL sorgular?n? loglar
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # SQL parametrelerini loglar
 

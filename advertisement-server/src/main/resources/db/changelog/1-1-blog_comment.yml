@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 5
       author: user
+      id: 13
       changes:
         - createTable:
-            tableName: comments
+            tableName: blog_comment
             columns:
               - column:
                   name: id
@@ -13,39 +13,34 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: content
-                  type: TEXT
+                  name: blogs_id
+                  type: BIGINT
                   constraints:
                     nullable: false
+                    foreignKeyName: fk_blog_comment_blogs
+                    references: blogs(id)
               - column:
                   name: user_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_comments_users
+                    foreignKeyName: fk_blogs_users
                     references: users(id)
               - column:
-                  name: ad_id
-                  type: BIGINT
+                  name: content
+                  type: TEXT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_comments_ads
-                    references: ads(id)
-              - column:
-                  name: blogs_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_blogs
-                    references: blogs(id)
-              - column:
-                  name: seo_slug
-                  type: VARCHAR(200)
-                  constraints:
-                    nullable: false
-                    unique: true
               - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
 

@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      author: user
+      id: 14
+      changes:
+        - createTable:
+            tableName: adver_category
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent
+                  type: BIGINT
+                  constraints:
+                    nullable: true

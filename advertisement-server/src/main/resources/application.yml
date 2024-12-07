@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: advertisement-server
   cloud:
     config:
       enabled: false
@@ -20,21 +22,16 @@ spring:
   sql:
     init:
       platform: postgres
-  security:
-    oauth2:
-      resourceserver:
-        public-paths: /v1/users/user-token
-        jwt:
-          jwk-set-uri: http://localhost:8180/realms/dev/protocol/openid-connect/certs
+
 
   liquibase:
-    change-log: classpath:/db/changelog/master.yml
-server:
-  port: 8083  # Uygulama portu
+    change-log: classpath:/db/changelog/masters.yml
+    default-schema: public
 
 logging:
   level:
     org.hibernate.SQL: DEBUG  # Hibernate SQL sorgular?n? loglar
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # SQL parametrelerini loglar
 
-
+server:
+  port: 8083

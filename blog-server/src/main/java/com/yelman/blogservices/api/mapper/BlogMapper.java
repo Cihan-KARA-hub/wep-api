@@ -2,7 +2,9 @@ package com.yelman.blogservices.api.mapper;
 
 import com.yelman.blogservices.api.dto.BlogDto;
 import com.yelman.blogservices.model.Blogs;
+import com.yelman.blogservices.model.Category;
 import com.yelman.blogservices.model.User;
+import com.yelman.blogservices.repository.CategoryRepository;
 import com.yelman.blogservices.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +12,11 @@ import org.springframework.stereotype.Component;
 public class BlogMapper implements BlogMappers {
 
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public BlogMapper(UserRepository userRepository) {
+    public BlogMapper(UserRepository userRepository, CategoryRepository categoryRepository) {
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -26,8 +30,10 @@ public class BlogMapper implements BlogMappers {
         blogDto.setContent(blogs.getContent());
         blogDto.setIsActive(blogs.getIsActive());
         blogDto.setMetaDescription(blogs.getMetaDescription());
-        blogDto.setUser_id(blogs.getAuthor().getId());
+        blogDto.setUserName(blogs.getAuthor().getUsername());
         blogDto.setReadingSecond(blogs.getReadingSecond());
+        blogDto.setCategories(blogs.getCategory().getId());
+        blogDto.setLanguage(blogs.getLanguage());
 
 
         String slug = generateSlug(blogs.getTitle());
@@ -49,21 +55,28 @@ public class BlogMapper implements BlogMappers {
         blogs.setIsActive(blogDto.getIsActive());
         blogs.setMetaDescription(blogDto.getMetaDescription());
         blogs.setReadingSecond(blogDto.getReadingSecond());
-
+        blogs.setCategory(findCategoryById(blogDto.getCategories()));
+        blogs.setLanguage(blogDto.getLanguage());
 
         String slug = generateSlug(blogDto.getTitle());
         blogs.setSlug(slug);
 
-
-        User author = findUserById(blogDto.getUser_id());
-        blogs.setAuthor(author);
+        blogs.setAuthor(findUserById(blogDto.getName()));
+        blogs.setAuthor(findUserById(blogDto.getUserName()));
 
         return blogs;
     }
 
-    private User findUserById(Long id) {
+    private User findUserById(String id) {
         if (id != null) {
-            return userRepository.findById(id).orElse(null);
+            return userRepository.findByUsername(id).orElse(null);
+        }
+        return null;
+    }
+
+    private Category findCategoryById(Long id) {
+        if (id != null) {
+            return categoryRepository.findById(id).orElse(null);
         }
         return null;
     }

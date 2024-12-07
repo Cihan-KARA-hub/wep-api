@@ -1,11 +1,10 @@
 package com.yelman.blogservices.api.dto;
 
-import com.yelman.blogservices.model.ActiveEnum;
+import com.yelman.blogservices.model.enums.ActiveEnum;
+import com.yelman.blogservices.model.enums.LanguageEnum;
 import lombok.*;
 
-import java.time.OffsetDateTime;
-
-
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,8 +15,13 @@ public class BlogDto {
     private String metaDescription;
     private String content;
     private String slug;
-    private long user_id;
+    private String userName;
+    private String name;
     private int readingSecond;
     private ActiveEnum isActive;
+    private long categories;
+    private LanguageEnum language;
+
+
 
 }

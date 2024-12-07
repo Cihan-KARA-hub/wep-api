@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 4
+      id: 12
       author: user
       changes:
         - createTable:
-            tableName: ads
+            tableName: advertisement
             columns:
               - column:
                   name: id
@@ -32,14 +32,14 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_ads_categories
+                    foreignKeyName: fk_advertisement_categories
                     references: categories(id)
               - column:
                   name: sub_category_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_ads_sub_categories
+                    foreignKeyName: fk_advertisement_sub_categories
                     references: sub_categories(id)
               - column:
                   name: stock
@@ -51,7 +51,7 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_ads_users
+                    foreignKeyName: fk_advertisement_users
                     references: users(id)
               - column:
                   name: status
@@ -69,7 +69,7 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_ads_stores
+                    foreignKeyName: fk_advertisement_stores
                     references: stores(id)
               - column:
                   name: created_at

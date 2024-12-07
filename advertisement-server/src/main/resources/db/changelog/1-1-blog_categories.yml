@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
       author: user
+      id: 10
       changes:
         - createTable:
-            tableName: categories
+            tableName: blog_categories
             columns:
               - column:
                   name: id
@@ -14,19 +14,11 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: name
-                  type: VARCHAR(100)
+                  type: varchar(255)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
-              - column:
-                  name: updated_at
-                  type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
-
-
-
-
+                  name: parent
+                  type: BIGINT
+                  constraints:
+                    nullable: true

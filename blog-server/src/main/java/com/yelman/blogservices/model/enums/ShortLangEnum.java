@@ -1,0 +1,37 @@
+package com.yelman.blogservices.model.enums;
+
+public enum ShortLangEnum {
+    Tr,
+    En,
+    Fr,
+    De,
+    Ar,
+    Bs,
+    Da,
+    Is,
+    Nl,
+    Hr,
+    It,
+    Hu,
+    Ms,
+    No,
+    Pl,
+    Pt,
+    Ro,
+    Ru,
+    Sq,
+    Fi,
+    Ua,
+    El,
+    Bg,
+    Ky,
+    Mn,
+    Sr,
+    Hy,
+    Ka,
+    Fa,
+    Kk,
+    Hi,
+
+}
+

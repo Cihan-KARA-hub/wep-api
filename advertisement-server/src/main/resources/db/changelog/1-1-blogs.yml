@@ -1,6 +1,7 @@
 databaseChangeLog:
+
   - changeSet:
-      id: 7
+      id: 11
       author: user
       changes:
         - createTable:
@@ -33,6 +34,13 @@ databaseChangeLog:
                     foreignKeyName: fk_blogs_users
                     references: users(id)
               - column:
+                  name: category
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_blogs_blog_categories
+                    references: blog_categories(id)
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
@@ -58,10 +66,8 @@ databaseChangeLog:
                   name: is_blog_active
                   type: VARCHAR(10)
               - column:
-                  name: blog_category_ids
-                  type: BIGINT
+                  name: language
+                  type: VARCHAR(40)
               - column:
-                  name: sun_blog_category_ids
-                  type: BIGINT
-
-
+                  name: short_language
+                  type: VARCHAR(10)

@@ -1,4 +1,4 @@
-package com.yelman.blogservices.model;
+package com.yelman.blogservices.model.enums;
 
 public enum ActiveEnum {
     ACTIVE,WAITING,REJECTED
