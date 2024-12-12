@@ -4,7 +4,7 @@ databaseChangeLog:
       author: user
       changes:
         - createTable:
-            tableName: questions
+            tableName: advertisement_offer
             columns:
               - column:
                   name: id
@@ -13,8 +13,8 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: content
-                  type: TEXT
+                  name: price
+                  type: INT
                   constraints:
                     nullable: false
               - column:
@@ -22,16 +22,20 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_questions_users
+                    foreignKeyName: fk_advertisement_offer_users
                     references: users(id)
               - column:
-                  name: ad_id
+                  name: advertisement_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_questions_advertisement
+                    foreignKeyName: fk_advertisement_offer_advertisement
                     references: advertisement(id)
               - column:
                   name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP

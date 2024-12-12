@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 19
+      author: user
+      changes:
+        - addColumn:
+            tableName: advertisement
+            columns:
+              - column:
+                  name: isActive
+                  type: VARCHAR(20)

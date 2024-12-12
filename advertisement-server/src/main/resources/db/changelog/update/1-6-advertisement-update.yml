@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 21
+      author: user
+      changes:
+        - addColumn:
+            tableName: advertisement
+            columns:
+              - column:
+                  name: rate_count
+                  type: int
+                  constraints:
+                    nullable: true

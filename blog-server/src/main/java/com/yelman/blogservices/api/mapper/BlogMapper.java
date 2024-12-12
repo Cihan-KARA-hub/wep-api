@@ -34,6 +34,7 @@ public class BlogMapper implements BlogMappers {
         blogDto.setReadingSecond(blogs.getReadingSecond());
         blogDto.setCategories(blogs.getCategory().getId());
         blogDto.setLanguage(blogs.getLanguage());
+        blogDto.setShortLang(blogs.getShortLang());
 
 
         String slug = generateSlug(blogs.getTitle());
@@ -57,6 +58,7 @@ public class BlogMapper implements BlogMappers {
         blogs.setReadingSecond(blogDto.getReadingSecond());
         blogs.setCategory(findCategoryById(blogDto.getCategories()));
         blogs.setLanguage(blogDto.getLanguage());
+        blogs.setShortLang(blogDto.getShortLang());
 
         String slug = generateSlug(blogDto.getTitle());
         blogs.setSlug(slug);

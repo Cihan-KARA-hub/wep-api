@@ -1,10 +1,8 @@
 package com.yelman.blogservices.services;
 
-import com.yelman.blogservices.api.dto.CategoryDto;
-import com.yelman.blogservices.api.dto.SubCategoryDto;
-import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.Blogs;
 import com.yelman.blogservices.model.Category;
+import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.repository.BlogRepository;
 import com.yelman.blogservices.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
@@ -37,6 +35,7 @@ public class AdminServices {
         }
         return ResponseEntity.notFound().build();
     }
+
     //blog aktifligini iptal etme
     @Transactional
     public ResponseEntity<Void> rejectBlog(long blogId) {
@@ -50,6 +49,7 @@ public class AdminServices {
         }
         return ResponseEntity.notFound().build();
     }
+
     //blog silme
     public ResponseEntity<Void> deleteBlog(long blogId) {
         Optional<Blogs> blog = blogRepository.findById(blogId);
@@ -59,28 +59,31 @@ public class AdminServices {
         }
         return ResponseEntity.notFound().build();
     }
+
     // kategori ekleme
-    public ResponseEntity<Void> createCategory(CategoryDto categorydto) {
+    public ResponseEntity<Void> createCategory(String name) {
         Category entity = new Category();
-        entity.setName(categorydto.getName());
+        entity.setName(name);
         entity.setParentId(0);
         categoryRepository.save(entity);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
     //kategori silme
     public ResponseEntity<Void> DeleteCategory(long id) {
         categoryRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
     //alt kategori ekleme
-    public ResponseEntity<Void> subCategory(SubCategoryDto subcategorydto) {
-        Category cat = categoryRepository.findById(subcategorydto.getParentId());
+    public ResponseEntity<Void> subCategory(long parentId, String name) {
+        Category cat = categoryRepository.findById(parentId);
         if (cat == null || cat.getParentId() != 0) {
             return ResponseEntity.notFound().build();
         }
         Category newCategory = new Category();
-        newCategory.setName(subcategorydto.getName());
-        newCategory.setParentId(subcategorydto.getParentId());
+        newCategory.setName(name);
+        newCategory.setParentId(parentId);
 
         categoryRepository.save(newCategory);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -89,7 +92,7 @@ public class AdminServices {
     // belemede olan blokları getir
     public ResponseEntity<HttpStatus> getWaitingBlogs(ActiveEnum activeEnum) {
         List<Blogs> waitingBlogs = blogRepository.findByIsActive(activeEnum);
-        if(waitingBlogs.isEmpty()) {
+        if (waitingBlogs.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(HttpStatus.OK);

@@ -40,14 +40,14 @@ public class AdminController {
     }
 
     @PostMapping("category")
-    public ResponseEntity<Void> categoryCreate(@RequestBody CategoryDto dto) {
-        return adminServices.createCategory(dto);
+    public ResponseEntity<Void> categoryCreate(@RequestParam String name ) {
+        return adminServices.createCategory(name);
     }
 
     @PostMapping("sub-category")
-    public ResponseEntity<Void> categoryCreate(@RequestBody SubCategoryDto dto) {
+    public ResponseEntity<Void> categoryCreate(@RequestParam long parentId,String name ) {
 
-        return adminServices.subCategory(dto);
+        return adminServices.subCategory(parentId,name);
     }
 
     @DeleteMapping("category-delete/{id}")

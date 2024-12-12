@@ -3,10 +3,11 @@ package com.yelman.advertisementserver.utils;
 import com.yelman.advertisementserver.model.CategoryModel;
 import com.yelman.advertisementserver.repository.CategoryRepository;
 import org.apache.poi.ss.usermodel.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-
+@Service
 public class ExcelServices implements IExcelServices {
     private final CategoryRepository categoryRepository;
 

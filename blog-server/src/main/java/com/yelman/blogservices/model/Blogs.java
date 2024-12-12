@@ -46,7 +46,6 @@ public class Blogs {
     @ManyToOne
     @JoinColumn(name = "category", referencedColumnName = "id", nullable = true)
     private Category category;
-
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;

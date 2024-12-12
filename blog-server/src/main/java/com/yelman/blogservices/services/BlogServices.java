@@ -2,10 +2,10 @@ package com.yelman.blogservices.services;
 
 import com.yelman.blogservices.api.dto.BlogDto;
 import com.yelman.blogservices.api.mapper.BlogMapper;
-import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.Blogs;
 import com.yelman.blogservices.model.Role;
 import com.yelman.blogservices.model.User;
+import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
 import com.yelman.blogservices.repository.BlogRepository;
 import com.yelman.blogservices.repository.UserRepository;
@@ -39,10 +39,11 @@ public class BlogServices {
         if (!user.get().getAuthorities().contains(Role.valueOf("ROLE_SUBSCRIBE"))) {
             return ResponseEntity.badRequest().body("not authorized or null user");
         }
-        Blogs blogDtoToBlogs = blogMapper.mapEntity(blogdto);
-        blogDtoToBlogs.setIsActive(ActiveEnum.WAITING);
-        blogDtoToBlogs.setAuthor(user.get());
-        blogRepository.save(blogDtoToBlogs);
+        Blogs blogs = blogMapper.mapEntity(blogdto);
+        blogs.setIsActive(ActiveEnum.WAITING);
+        int val = blogdto.getLanguage().ordinal();
+        blogs.setShortLang(ShortLangEnum.values()[val]);
+        blogRepository.save(blogs);
         return ResponseEntity.ok().body("success");
     }
 
@@ -69,12 +70,13 @@ public class BlogServices {
         Pageable pageable = PageRequest.of(page, size);
         return blogRepository.findAll(pageable);
     }
-     public Page<Blogs> getCategoryNameAndLanguage(String category , int page, int size) {
-         Pageable pageable = PageRequest.of(page, size);
-       Page<Blogs> blogs= blogRepository.findByAuthor_Username(category,pageable);
-         log.info(blogs.toString());
-         return blogs;
-     }
+
+    public Page<Blogs> getCategoryNameAndLanguage(String category, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Blogs> blogs = blogRepository.findByAuthor_Username(category, pageable);
+        log.info(blogs.toString());
+        return blogs;
+    }
 
 
 }

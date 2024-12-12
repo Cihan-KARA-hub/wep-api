@@ -28,33 +28,24 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: category_id
+                  name: adver_category_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_advertisement_categories
-                    references: categories(id)
+                    foreignKeyName: fk_advertisement_adver_category
+                    references: adver_category(id)
               - column:
-                  name: sub_category_id
-                  type: BIGINT
+                  name: rate
+                  type: int
                   constraints:
-                    nullable: false
-                    foreignKeyName: fk_advertisement_sub_categories
-                    references: sub_categories(id)
+                    nullable: true
               - column:
                   name: stock
                   type: INT
                   constraints:
                     nullable: false
               - column:
-                  name: owner_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_advertisement_users
-                    references: users(id)
-              - column:
-                  name: status
+                  name: status # satılık mı degil mi
                   type: VARCHAR(50)
                   constraints:
                     nullable: false
@@ -65,12 +56,12 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
-                  name: store_id
+                  name: advertisement_user_store_id
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_advertisement_stores
-                    references: stores(id)
+                    foreignKeyName: fk_advertisement_advertisement_user_store
+                    references: advertisement_user_store(id)
               - column:
                   name: created_at
                   type: TIMESTAMP
@@ -79,3 +70,22 @@ databaseChangeLog:
                   name: updated_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: state #sıfır veya ikinci el
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seller_type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: detail
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vision_count
+                  type: int
+

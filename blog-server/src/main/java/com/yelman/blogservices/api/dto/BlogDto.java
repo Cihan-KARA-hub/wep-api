@@ -2,6 +2,7 @@ package com.yelman.blogservices.api.dto;
 
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.LanguageEnum;
+import com.yelman.blogservices.model.enums.ShortLangEnum;
 import lombok.*;
 
 @Data
@@ -21,6 +22,7 @@ public class BlogDto {
     private ActiveEnum isActive;
     private long categories;
     private LanguageEnum language;
+    private ShortLangEnum shortLang;
 
 
 

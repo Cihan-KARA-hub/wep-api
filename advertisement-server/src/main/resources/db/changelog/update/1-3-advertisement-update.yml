@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 18
+      author: user
+      changes:
+        - addColumn:
+            tableName: advertisement
+            columns:
+              - column:
+                  name: currency
+                  type: VARCHAR(100)
