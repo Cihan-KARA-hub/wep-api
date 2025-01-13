@@ -5,10 +5,13 @@ spring:
     config:
       enabled: false
   datasource:
-    url: ${CHARGE_STATION_DB:jdbc:postgresql://localhost:5432/advertisement_db}
-    username: ilan_admin
-    password: ilan_admin123
-    driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/advertisement_db
+      username: ilan_admin
+      password: ilan_admin123
+      driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      enabled: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,12 +26,17 @@ spring:
     init:
       platform: postgres
 server:
-  port: 8085  # Uygulama portu
+  port: 8084  # Uygulama portu
 
 logging:
   level:
     liquibase: DEBUG
-    org.hibernate.SQL: DEBUG  # Hibernate SQL sorgular?n? loglar
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # SQL parametrelerini loglar
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
-
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true

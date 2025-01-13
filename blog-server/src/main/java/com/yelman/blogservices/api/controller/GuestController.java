@@ -1,16 +1,13 @@
 package com.yelman.blogservices.api.controller;
 
 
+import com.yelman.blogservices.api.dto.BlogDto;
 import com.yelman.blogservices.api.dto.PageDto;
-import com.yelman.blogservices.model.Blogs;
+import com.yelman.blogservices.model.blog.Blogs;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
 import com.yelman.blogservices.services.BlogServices;
 import com.yelman.blogservices.services.filter.DinamicBlogServices;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,30 +23,15 @@ public class GuestController {
     }
 
 
-    @GetMapping("/category/{categoryName}")
-    public ResponseEntity<Page<Blogs>> getBlogsByCategory(
-            @PathVariable String categoryName,
-            @PageableDefault(size = 10, page = 5, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Blogs> blogs = dinamicBlogServices.getBlogsByCategoryName(categoryName, pageable);
-        return ResponseEntity.ok(blogs);
-    }
 
-    @GetMapping("{categoryName}")
-    public Page<Blogs> getBlogsByCategory(
-            @PathVariable String categoryName,
+    @GetMapping("{categoryId}")
+    public ResponseEntity<Page<BlogDto>> getDynamicQuery(
+            @PathVariable(required = false)  Long categoryId,
+            @RequestParam(required = false)  Long authorId,
+            @RequestParam(required = false) ShortLangEnum lang,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return dinamicBlogServices.getBlogsByCategoryName(categoryName, pageable);
-    }
-
-    @GetMapping("{categoryName}/{lang}")
-    public ResponseEntity<Page<Blogs>> getBlogsByCategoryAndLang(
-            @PathVariable String categoryName,
-            @PathVariable ShortLangEnum lang,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return dinamicBlogServices.getCategoryAndLanguage(categoryName, lang, page, size);
+        return dinamicBlogServices.getDynamicQuery(categoryId,authorId,lang,page,size);
     }
 
     @GetMapping("asc")
@@ -65,15 +47,8 @@ public class GuestController {
         return blogServices.getAllUserBlog(userName, pageDto.getPage(), pageDto.getSize());
     }
 
-    @GetMapping("all-blogs")
-    public Page<Blogs> getAllBlogs(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return blogServices.getBlogs(page, size);
-    }
 
-    @GetMapping("{category}/")
-    public Page<Blogs> getCategoryAndLangBlogs(@PathVariable String category, @RequestBody PageDto pageDto) {
-        return blogServices.getCategoryNameAndLanguage(category, pageDto.getPage(), pageDto.getSize());
-    }
+
 
 }
 

@@ -29,9 +29,11 @@ public class User {
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
     @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
+
     @JsonIgnore
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
@@ -70,8 +72,16 @@ public class User {
         return this.username;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public long getId() {
         return this.id;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public boolean isAccountNonExpired() {

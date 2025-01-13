@@ -1,10 +1,10 @@
 package com.yelman.blogservices.services;
 
-import com.yelman.blogservices.model.Blogs;
-import com.yelman.blogservices.model.Category;
+import com.yelman.blogservices.model.blog.Blogs;
+import com.yelman.blogservices.model.blog.Category;
 import com.yelman.blogservices.model.enums.ActiveEnum;
-import com.yelman.blogservices.repository.BlogRepository;
-import com.yelman.blogservices.repository.CategoryRepository;
+import com.yelman.blogservices.repository.blog.BlogRepository;
+import com.yelman.blogservices.repository.blog.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

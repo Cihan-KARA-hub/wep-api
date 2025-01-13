@@ -4,11 +4,13 @@ import com.yelman.identityserver.api.dto.CreateUserRequest;
 import com.yelman.identityserver.model.User;
 import com.yelman.identityserver.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import java.util.Optional;
 
@@ -49,6 +51,5 @@ public class UserService implements UserDetailsService {
                 .build();
         return userRepository.save(newUser);
     }
-
 
 }

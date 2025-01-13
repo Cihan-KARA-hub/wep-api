@@ -1,6 +1,6 @@
 package com.yelman.blogservices.api.controller;
 
-import com.yelman.blogservices.model.Comments;
+import com.yelman.blogservices.model.blog.Comments;
 import com.yelman.blogservices.services.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

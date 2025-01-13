@@ -1,17 +1,15 @@
 package com.yelman.advertisementserver.api.dto;
 
-import com.yelman.advertisementserver.model.CategoryModel;
+import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.model.enums.CurrencyEnum;
 import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
 import com.yelman.advertisementserver.model.enums.StateEnum;
 import com.yelman.advertisementserver.model.enums.StatusEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
-
+@Data
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,11 +19,10 @@ public class AdvertisementDto {
     private String title;
     private String description;
     private BigDecimal price;
-    private CategoryDto category; // Category modelinin id'si
+    private Category category; // Category modelinin id'si
     private Integer rate;
     private Integer stock;
     private StatusEnum status; // e.g., satılık, satılmadı
-    private String seoSlug;
     private UserStoreDto userStore; // UserStore modelinin id'si
     private StateEnum state; // sıfır veya ikinci el
     private SellerTypeEnum sellerType;

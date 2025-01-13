@@ -2,10 +2,7 @@ package com.yelman.advertisementserver.model;
 
 import com.yelman.advertisementserver.model.enums.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
@@ -16,6 +13,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "advertisement")
 public class Advertisement {
 
@@ -34,8 +32,8 @@ public class Advertisement {
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "adver_category_id", nullable = false,referencedColumnName = "id")
-    private CategoryModel category;
+    @JoinColumn(name = "adver_category_id", nullable = false)
+    private Category category;
 
     @Column(name = "rate")
     private Integer rate;

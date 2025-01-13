@@ -27,6 +27,24 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/masters.yml
     default-schema: public
+    #Email sender
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cihankara632@gmail.com
+    password: ovtz mkng waxy bhvf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+
+
+
 
 logging:
   level:
@@ -35,3 +53,9 @@ logging:
 
 server:
   port: 8083
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true

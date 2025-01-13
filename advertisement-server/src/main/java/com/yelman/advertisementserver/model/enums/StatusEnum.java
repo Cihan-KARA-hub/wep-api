@@ -1,5 +1,7 @@
 package com.yelman.advertisementserver.model.enums;
 
+import lombok.Getter;
+
 public enum StatusEnum {
     FOR_SALE("Satılık"),
     SOLD("Satıldı");
@@ -10,7 +12,4 @@ public enum StatusEnum {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: price
-                  type: INT
+                  type: DECIMAL(10, 2)
                   constraints:
                     nullable: false
               - column:
@@ -31,6 +31,11 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_advertisement_offer_advertisement
                     references: advertisement(id)
+              - column:
+                  name: currency
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: TIMESTAMP

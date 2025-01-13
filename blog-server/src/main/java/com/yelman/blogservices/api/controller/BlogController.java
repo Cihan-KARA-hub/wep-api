@@ -1,12 +1,12 @@
 package com.yelman.blogservices.api.controller;
 
 import com.yelman.blogservices.api.dto.BlogDto;
-import com.yelman.blogservices.api.dto.PageDto;
-import com.yelman.blogservices.model.Blogs;
 import com.yelman.blogservices.services.BlogServices;
-import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @RestController
@@ -19,7 +19,8 @@ public class BlogController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<String> createBlog(@RequestBody BlogDto blogDto) {
+    public ResponseEntity<HttpStatus> createBlog(@RequestBody BlogDto blogDto
+                                            ) throws IOException {
         return blogServices.createBlog(blogDto);
     }
 

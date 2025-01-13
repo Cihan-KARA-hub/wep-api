@@ -1,6 +1,11 @@
+version: '3.7'
+
 services:
+  postgres:
+    image: postgres:16.2
+
   advertisement-db:
-    image: postgres
+    image: postgres:16.2
     volumes:
       - advertisement_postgres_data:/var/lib/postgresql/data
     environment:
@@ -9,19 +14,20 @@ services:
       POSTGRES_PASSWORD: ${ANOTHER_POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
-  blog-db:
-    image: postgres
+
+  photo-db:
+    image: postgres:16.2
     volumes:
-      - blog_postgres_data:/var/lib/postgresql/data
+      - photo_postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: ${BLOG_POSTGRES_DB}
-      POSTGRES_USER: ${BLOG_POSTGRES_USER}
-      POSTGRES_PASSWORD: ${BLOG_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${PHOTO_POSTGRES_DB}
+      POSTGRES_USER: ${PHOTO_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${PHOTO_POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
 
 volumes:
   advertisement_postgres_data:
     driver: local
-  blog_postgres_data:
+  photo_postgres_data:
     driver: local

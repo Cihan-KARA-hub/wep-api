@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/photo_db
+    username: ilan_admin
+    password: ilan_admin123
+    driver-class-name: org.postgresql.Driver
+
+  servlet:
+    multipart:
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Veritabanı şemasını güncellemek için 'update' kullanılır
+    show-sql: true  # SQL sorgularını konsolda görmek için
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL için Hibernate Dialect'i
+    database: postgresql
+    open-in-view: false  # Spring MVC'nin view rendering sırasında veri yüklemesi yapmaması için
+    generate-ddl: false  # Otomatik DDL oluşturulmasını engellemek
+
+  sql:
+    init:
+      platform: postgres  # SQL platformunu belirler (PostgreSQL için)
+
+
+logging:
+  level:
+    liquibase: DEBUG  # Liquibase log seviyesini DEBUG yaparak detaylı hata ayıklama
+    org.hibernate.SQL: DEBUG  # Hibernate SQL sorgularını DEBUG seviyesinde logla
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # Hibernate parametre binding'lerini TRACE seviyesinde logla

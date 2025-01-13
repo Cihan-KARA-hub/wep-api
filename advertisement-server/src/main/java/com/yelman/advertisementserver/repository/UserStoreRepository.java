@@ -4,6 +4,8 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.yelman.advertisementserver.model.enums.ActiveEnum;
 import com.yelman.advertisementserver.model.QUserStore;
 import com.yelman.advertisementserver.model.UserStore;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
@@ -24,4 +26,6 @@ public interface UserStoreRepository extends JpaRepository<UserStore, Long>,
     Optional<UserStore> findByStoreName(String storeName);
 
     Optional<List<UserStore>> findByIsActive(ActiveEnum isActive);
+    Page<UserStore> findByCategory(String categoryName,
+                                   Pageable pageable);
 }

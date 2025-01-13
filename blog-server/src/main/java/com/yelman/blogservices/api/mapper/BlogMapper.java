@@ -1,11 +1,11 @@
 package com.yelman.blogservices.api.mapper;
 
 import com.yelman.blogservices.api.dto.BlogDto;
-import com.yelman.blogservices.model.Blogs;
-import com.yelman.blogservices.model.Category;
-import com.yelman.blogservices.model.User;
-import com.yelman.blogservices.repository.CategoryRepository;
-import com.yelman.blogservices.repository.UserRepository;
+import com.yelman.blogservices.model.blog.Blogs;
+import com.yelman.blogservices.model.blog.Category;
+import com.yelman.blogservices.model.blog.User;
+import com.yelman.blogservices.repository.blog.CategoryRepository;
+import com.yelman.blogservices.repository.blog.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component

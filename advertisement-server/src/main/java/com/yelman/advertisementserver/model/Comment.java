@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.OffsetDateTime;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -19,7 +20,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advertisement_id", nullable = false, referencedColumnName = "id")
     private Advertisement advertisement;  // Assuming you have an Advertisement entity

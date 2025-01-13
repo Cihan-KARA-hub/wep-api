@@ -32,5 +32,7 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
 
     List<Advertisement> findByStateAndIsActive(StateEnum state, ActiveEnum isActive);
     List<Advertisement> findBySellerTypeAndIsActive(SellerTypeEnum sellerType, ActiveEnum isActive);
+
+
 }
 

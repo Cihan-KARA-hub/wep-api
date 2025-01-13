@@ -1,5 +1,8 @@
 package com.yelman.advertisementserver.model.enums;
 
+import lombok.Getter;
+
+
 public enum CurrencyEnum {
     USD("USD", "$"),
     EUR("EUR", "€"),

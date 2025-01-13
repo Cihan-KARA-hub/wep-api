@@ -1,8 +1,10 @@
 package com.yelman.advertisementserver.services;
 
 import com.yelman.advertisementserver.api.dto.AdvertisementDto;
+import com.yelman.advertisementserver.api.dto.AdvertisementDtoSecond;
 import com.yelman.advertisementserver.api.mapper.AdvertisementMapper;
 import com.yelman.advertisementserver.model.Advertisement;
+import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.model.UserStore;
 import com.yelman.advertisementserver.model.enums.ActiveEnum;
 import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
@@ -10,6 +12,7 @@ import com.yelman.advertisementserver.model.enums.StateEnum;
 import com.yelman.advertisementserver.repository.AdvertisementRepository;
 import com.yelman.advertisementserver.repository.CategoryRepository;
 import com.yelman.advertisementserver.repository.UserStoreRepository;
+import com.yelman.advertisementserver.utils.SeoSlug;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +39,16 @@ public class AdvertisementService {
         this.categoryRepository = categoryRepository;
     }
 
-    public ResponseEntity<String> addAdvertisement(AdvertisementDto ad) {
-        Optional<UserStore> user = userStoreRepository.findById(ad.getUserStore().getId());
-        if (user.isPresent()) {
-            Advertisement entity = advertisementMapper.toEntity(ad);
-            entity.setUserStore(userStoreRepository.findById(ad.getUserStore().getId()).orElse(null));
-            entity.setCategory(categoryRepository.findById(ad.getCategory().getId()).orElse(null));
-            entity.setIsActive(ActiveEnum.WAITING);
+    public ResponseEntity<String> addAdvertisement(AdvertisementDtoSecond ad) {
+
+        Optional<UserStore> user = userStoreRepository.findById(ad.getUserStories());
+        Optional<Category> category = categoryRepository.findById(ad.getCategories());
+        if (user.isPresent() && user.get().getIsActive() == ActiveEnum.ACTIVE) {
+            Advertisement entity = advertisementMapper.toEntites(ad);
+            entity.setUserStore(user.get());
+            entity.setCategory(category.get());
+            entity.setIsActive(ActiveEnum.ACTIVE);
+            entity.setSeoSlug(generateSeoSlug(ad.getTitle()));
             advertisementRepository.save(entity);
             return ResponseEntity.ok("success");
         }
@@ -52,10 +59,6 @@ public class AdvertisementService {
         Advertisement dt = advertisementRepository.findById(id).orElse(null);
         if (dt == null) return null;
         return dt;
-    }
-
-    public List<Advertisement> getCategoryAdvertisements(long id) {
-        return advertisementRepository.findByCategory_Id(id);
     }
 
     public ResponseEntity<Page<AdvertisementDto>> findByStateAndIsActive(
@@ -87,13 +90,25 @@ public class AdvertisementService {
 
     //stoktan düşmesi için method
     @Transactional
-    public ResponseEntity<String> getUserStockDis(long advertisementId) {
+    public ResponseEntity<String> getUserStockDis(long advertisementId,int stock) {
         Advertisement ad = advertisementRepository.findById(advertisementId).orElse(null);
         if (ad == null) return ResponseEntity.notFound().build();
-        ad.setStock(ad.getStock() - 1);
-        if (ad.getStock() <= 0) return ResponseEntity.notFound().build();
+        ad.setStock(ad.getStock() - stock);
+        if (ad.getStock() <= 0) {
+            ad.setStock(0);
+            ad.setIsActive(ActiveEnum.NOT_STOCK);
+            return ResponseEntity.ok("stock yeterli degil ");
+        }
         advertisementRepository.save(ad);
         return ResponseEntity.ok("kalan Stok :" + ad.getStock() + " name : " + ad.getTitle());
+    }
+    @Transactional
+    public ResponseEntity<String> getUserStockIcrement(long advertisementId,int stock) {
+        Advertisement ad = advertisementRepository.findById(advertisementId).orElse(null);
+        if (ad == null) return ResponseEntity.notFound().build();
+        ad.setStock(ad.getStock() +stock);
+        advertisementRepository.save(ad);
+        return ResponseEntity.ok(" Stok :" + ad.getStock() + " name : " + ad.getTitle());
     }
 
     //yıldızlama işleminde  kullanıcıların yıldız vermesi
@@ -113,6 +128,26 @@ public class AdvertisementService {
 
     private int updateAverage(int oldAverage, int voteCount, int newVote) {
         return (oldAverage * voteCount + newVote) / (voteCount + 1);
+    }
+    public static String generateSeoSlug(String text) {
+        // Küçük harfe dönüştür
+        String slug = text.toLowerCase();
+
+        // Unicode karakterlerini normalleştir
+        slug = Normalizer.normalize(slug, Normalizer.Form.NFD);
+        slug = slug.replaceAll("[^\\p{ASCII}]", "");
+
+        // Boşlukları tire (-) ile değiştir
+        slug = slug.replaceAll("\\s+", "-");
+
+        // Yalnızca harf, rakam ve tire (-) karakterlerine izin ver
+        slug = slug.replaceAll("[^a-z0-9-]", "");
+
+        // Başta ve sonda tire varsa temizle
+        slug = slug.replaceAll("^-+", "");
+        slug = slug.replaceAll("-+$", "");
+
+        return slug;
     }
 }
 

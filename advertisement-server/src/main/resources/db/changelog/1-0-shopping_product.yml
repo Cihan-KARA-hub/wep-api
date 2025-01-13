@@ -1,0 +1,94 @@
+databaseChangeLog:
+  - changeSet:
+      id: 22
+      author: user
+      changes:
+        - createTable:
+            tableName: shopping_product
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: DECIMAL(10, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shopping_categories_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_shopping_product_shopping_categories
+                    references: shopping_categories(id)
+              - column:
+                  name: rate
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: brand
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: currency
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: stock
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seo_slug
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: shopping_product_shopping_store_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_shopping_product_shopping_store
+                    references: shopping_store(id)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: seller_type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: detail
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vision_count
+                  type: int
+              - column:
+                  name: rate_count
+                  type: int
+

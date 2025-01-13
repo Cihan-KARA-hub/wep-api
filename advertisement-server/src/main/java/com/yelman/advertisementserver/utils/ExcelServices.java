@@ -1,6 +1,6 @@
 package com.yelman.advertisementserver.utils;
 
-import com.yelman.advertisementserver.model.CategoryModel;
+import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.repository.CategoryRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class ExcelServices implements IExcelServices {
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
 
-            CategoryModel lastParentCategory = null; // En son kaydedilen ana kategori
+            Category lastParentCategory = null; // En son kaydedilen ana kategori
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // İlk satırı atla (başlık satırı)
@@ -29,7 +29,7 @@ public class ExcelServices implements IExcelServices {
 
                 if (cell1 != null && cell1.getStringCellValue() != null && !cell1.getStringCellValue().isEmpty()) {
                     // Ana kategori varsa, yeni bir ana kategori oluştur
-                    CategoryModel parentCategory = new CategoryModel();
+                    Category parentCategory = new Category();
                     parentCategory.setName(cell1.getStringCellValue());
                     parentCategory.setParentId(0); // Ana kategorilerin parentId'si 0
                     lastParentCategory = categoryRepository.save(parentCategory);
@@ -37,7 +37,7 @@ public class ExcelServices implements IExcelServices {
 
                 if (cell2 != null && cell2.getStringCellValue() != null && !cell2.getStringCellValue().isEmpty() && lastParentCategory != null) {
                     // Alt kategori varsa, en son kaydedilen ana kategoriye bağla
-                    CategoryModel subCategory = new CategoryModel();
+                    Category subCategory = new Category();
                     subCategory.setName(cell2.getStringCellValue());
                     subCategory.setParentId(lastParentCategory.getId()); // Alt kategoriyi ana kategoriye bağla
                     categoryRepository.save(subCategory);

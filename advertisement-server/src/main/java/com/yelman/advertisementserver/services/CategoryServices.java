@@ -1,6 +1,6 @@
 package com.yelman.advertisementserver.services;
 
-import com.yelman.advertisementserver.model.CategoryModel;
+import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,21 +15,21 @@ public class CategoryServices {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryModel> getParentCategories() {
-        List<CategoryModel> model = categoryRepository.findAll();
-        List<CategoryModel> categories = new ArrayList<>();
-        for (CategoryModel category : model) {
+    public List<Category> getParentCategories() {
+        List<Category> model = categoryRepository.findAll();
+        List<Category> categories = new ArrayList<>();
+        for (Category category : model) {
             if (category.getParentId() == 0) {
                 categories.add(category);
             }
         }
         return categories;
     }
-    public List<CategoryModel> getSubCategories(String category) {
-        CategoryModel model1=categoryRepository.findByName(category);
-        List<CategoryModel> model = categoryRepository.findAll();
-        List<CategoryModel> categories = new ArrayList<>();
-        for (CategoryModel category1 : model) {
+    public List<Category> getSubCategories(String category) {
+        Category model1=categoryRepository.findByName(category);
+        List<Category> model = categoryRepository.findAll();
+        List<Category> categories = new ArrayList<>();
+        for (Category category1 : model) {
             if (category1.getParentId() == model1.getId()) {
                 categories.add(category1);
             }

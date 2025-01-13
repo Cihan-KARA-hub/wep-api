@@ -9,6 +9,8 @@ import com.yelman.advertisementserver.model.Advertisement;
 import com.yelman.advertisementserver.model.QAdvertisement;
 import com.yelman.advertisementserver.model.enums.ActiveEnum;
 import com.yelman.advertisementserver.model.enums.AdvertisementOrdersEnum;
+import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
+import com.yelman.advertisementserver.model.enums.StateEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
@@ -66,7 +68,10 @@ public class QueryServices {
 
     //istenilen fiyar aralıgına göre sırala
     @Transactional
-    public ResponseEntity<Page<AdvertisementDto>> getCategoryIdMinMaxPriceBetween(long category, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+    public ResponseEntity<Page<AdvertisementDto>> getCategoryIdMinMaxPriceBetween(
+            long category, SellerTypeEnum sellerType, int rate,
+            StateEnum state, BigDecimal minPrice,
+            BigDecimal maxPrice, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QAdvertisement product = advertisement;
         long total = queryFactory.selectFrom(advertisement)
@@ -75,6 +80,15 @@ public class QueryServices {
                 .fetchCount();
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
+        if (state != null) {
+            booleanBuilder.and(advertisement.state.eq(state));
+        }
+        if (sellerType != null) {
+            booleanBuilder.and(advertisement.sellerType.eq(sellerType));
+        }
+        if (rate > 0) {
+            booleanBuilder.and(advertisement.rate.eq(rate));
+        }
         if (category > 0) {
             booleanBuilder.and(product.category.id.eq(category));
         }
@@ -92,11 +106,12 @@ public class QueryServices {
                 .map(advertisementMapper::toDto)
                 .toList();
 
-        Page<AdvertisementDto> resultPage = new PageImpl<>(dtoList, pageable, total);
+        Page<AdvertisementDto> pageResult = new PageImpl<>(dtoList, pageable, total);
 
-        return ResponseEntity.ok(resultPage);
-
+        return ResponseEntity.ok(pageResult);
     }
+
+
 
 
 }

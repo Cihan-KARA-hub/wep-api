@@ -3,7 +3,7 @@ package com.yelman.advertisementserver.api.controller;
 import com.yelman.advertisementserver.api.dto.UserStoreDto;
 import com.yelman.advertisementserver.model.enums.ActiveEnum;
 import com.yelman.advertisementserver.services.AdminServices;
-
+import com.yelman.advertisementserver.services.UserStoreServices;
 import com.yelman.advertisementserver.utils.ExcelServices;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -22,6 +22,7 @@ public class AdminController {
 
     private final ExcelServices excelServices;
     private final AdminServices adminServices;
+    private final UserStoreServices userStoreServices;
 
 
     //kategory yükleme exceli
@@ -55,6 +56,16 @@ public class AdminController {
         return adminServices.getAdvertisementAccept(id);
     }
 
+    // magazların aktif olanları  veya pasif olanları vs getirir
+    @GetMapping("/store-isactive/{enumValue}")
+    public List<UserStoreDto> getStoreIsActive(@PathVariable ActiveEnum enumValue) {
+        return adminServices.getUserStore(enumValue);
+    }
+
+    @DeleteMapping("/store-delete/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable long id) {
+        return userStoreServices.DeleteUserStore(id);
+    }
 
 
 }

@@ -1,10 +1,16 @@
 package com.yelman.blogservices.services.filter;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yelman.blogservices.model.Blogs;
-import com.yelman.blogservices.model.QBlogs;
+import com.yelman.blogservices.api.dto.BlogDto;
+import com.yelman.blogservices.api.mapper.BlogMapper;
+import com.yelman.blogservices.model.blog.Blogs;
+import com.yelman.blogservices.model.blog.QBlogs;
+
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
@@ -19,46 +25,62 @@ import java.util.List;
 
 @Service
 public class DinamicBlogServices {
+
     @PersistenceContext
     private EntityManager entityManager;
+    private  final BlogMapper blogMapper;
 
-    @Transactional
-    public Page<Blogs> getBlogsByCategoryName(String categoryName, Pageable pageable) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-        QBlogs blogs = QBlogs.blogs;
-        long total = queryFactory.select(blogs.count())
-                .from(blogs)
-                .where(blogs.category.name.eq(categoryName).and(blogs.isActive.eq(ActiveEnum.ACTIVE)))
-                .fetchCount();
-        List<Blogs> blogList = queryFactory.selectFrom(blogs)
-                .where(blogs.category.name.eq(categoryName))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        return new PageImpl<>(blogList, pageable, total);
+    public DinamicBlogServices(BlogMapper blogMapper) {
+        this.blogMapper = blogMapper;
     }
 
+
     @Transactional
-    public ResponseEntity<Page<Blogs>> getCategoryAndLanguage(String category, ShortLangEnum language, int page, int size) {
+    public ResponseEntity<Page<BlogDto>> getDynamicQuery(Long categoryId, Long authorId, ShortLangEnum language, int page, int size) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QBlogs blogs = QBlogs.blogs;
+
         Pageable pageable = PageRequest.of(page, size);
-        List<Blogs> products = queryFactory.selectFrom(blogs)
-                .where(blogs.category.name.eq(category)
-                        .and(blogs.shortLang.eq(ShortLangEnum.Tr))
-                        .and(blogs.isActive.eq(ActiveEnum.ACTIVE)))
+
+        BooleanBuilder query = new BooleanBuilder();
+        if (authorId != null) {
+            query.and(blogs.author.id.eq(authorId));
+        }
+        if (categoryId != null) {
+            query.and(blogs.category.id.eq(categoryId));
+        }
+        query.and(blogs.shortLang.eq(language != null ? language : ShortLangEnum.Tr));
+        query.and(blogs.isActive.eq(ActiveEnum.ACTIVE));
+
+        QueryResults<Blogs> results = queryFactory.selectFrom(blogs)
+                .where(query)
+                .orderBy(blogs.shortLang.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(blogs.shortLang.asc())
-                .fetch();
-        if (blogs.id == null) return ResponseEntity.ok().build();
-        long total = queryFactory.selectFrom(blogs)
-                .where(blogs.category.name.eq(category)
-                        .and(blogs.shortLang.eq(language)))
-                .fetchCount();
+                .fetchResults();
 
-        return ResponseEntity.ok(new PageImpl<>(products, pageable, total));
+        List<Blogs> blogList = results.getResults();
+        long total = results.getTotal();
+
+        if (blogList.isEmpty()) {
+            return ResponseEntity.ok(Page.empty());
+        }
+
+        // Fotoğraf bilgisi olmadan sadece blogları içeren liste oluşturuluyor
+        List<BlogDto> combinedList = blogList.stream()
+                .map(blog -> {
+                    BlogDto dto = new BlogDto();
+                    blogMapper.mapDto(blog);
+                    return dto; // Fotoğraf kısmı kaldırıldı
+                })
+                .toList();
+
+        Page<BlogDto> pageResult = new PageImpl<>(combinedList, pageable, total);
+
+        return ResponseEntity.ok(pageResult);
     }
+
+
 
     // aktif basif veya  yayından kaldırılmış olan blogları listele
     @Transactional
@@ -91,7 +113,6 @@ public class DinamicBlogServices {
                 .fetchOne();
         Page<Blogs> pageResult = new PageImpl<>(blogs1, pageable, total);
         return ResponseEntity.ok(pageResult);
-
 
     }
 

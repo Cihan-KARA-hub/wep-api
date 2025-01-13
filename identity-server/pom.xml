@@ -7,7 +7,6 @@
         <artifactId>web-backend</artifactId>
         <version>1.0.0</version>
     </parent>
-    <groupId>com.yelman</groupId>
     <artifactId>identity-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>identity-server</name>
@@ -22,6 +21,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/java-dotenv -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
         <dependency>

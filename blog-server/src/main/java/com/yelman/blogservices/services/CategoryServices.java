@@ -1,6 +1,6 @@
 package com.yelman.blogservices.services;
 
-import com.yelman.blogservices.repository.CategoryRepository;
+import com.yelman.blogservices.repository.blog.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 @Service

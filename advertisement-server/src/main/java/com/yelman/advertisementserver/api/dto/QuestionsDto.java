@@ -15,8 +15,8 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class QuestionsDto {
     private Long id;
-    private Long advertisementId;
-    private Long userId;
+    private long advertisementId;
+    private long userId;
     private String title;
     private String content;
     private OffsetDateTime createdAt;

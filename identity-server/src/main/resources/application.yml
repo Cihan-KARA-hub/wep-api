@@ -3,7 +3,7 @@ spring:
     config:
       enabled: false
   datasource:
-    url: ${CHARGE_STATION_DB:jdbc:postgresql://localhost:5432/advertisement_db}
+    url: jdbc:postgresql://localhost:5432/advertisement_db
     username: ilan_admin
     password: ilan_admin123
     driver-class-name: org.postgresql.Driver
@@ -20,14 +20,20 @@ spring:
   sql:
     init:
       platform: postgres
+  application:
+    name: identity-server
 security:
   jwt:
     token:
-      secret-key: mYiADZOy9Hq5pTfomhj9hPUJLGAN/ZB6AZ4yoHfCtN0f8DaNQr6+4qeaJ9YfMK4ZbX85J3ao6TotW+jrLKLGeafpaYYLn2mmrYOB/1mJzhQYEaf883PtWAIwnTwHpPuEsJAhyHwEtlTvy++pZA+0bns66RUDBk80bJUA4JhJUI8=
-
+      secret-key: ${SECRET_KEY}
 server:
-  port: 8082  # Uygulama portu
-
+  port: 8087
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}
+  instance:
+    preferIpAddress: true
 logging:
   level:
     org.hibernate.SQL: DEBUG  # Hibernate SQL sorgular?n? loglar

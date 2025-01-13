@@ -76,10 +76,10 @@ public class CommentServices {
         if (dataPage.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<CommentDto> dtoList = dataPage.stream()
-                .map(commentMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(new PageImpl<>(dtoList, pageable, dataPage.getTotalElements()));
+        Page<CommentDto> dtoList = dataPage
+                .map(commentMapper::toDto);
+
+        return ResponseEntity.ok(dtoList);
     }
 
 }

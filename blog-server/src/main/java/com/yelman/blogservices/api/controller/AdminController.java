@@ -1,13 +1,9 @@
 package com.yelman.blogservices.api.controller;
 
-import com.yelman.blogservices.api.dto.BlogDto;
-import com.yelman.blogservices.api.dto.CategoryDto;
-import com.yelman.blogservices.api.dto.SubCategoryDto;
-import com.yelman.blogservices.model.Blogs;
+import com.yelman.blogservices.model.blog.Blogs;
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.services.AdminServices;
 import com.yelman.blogservices.services.filter.DinamicBlogServices;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

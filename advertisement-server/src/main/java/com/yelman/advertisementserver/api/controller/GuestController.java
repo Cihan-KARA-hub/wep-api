@@ -3,8 +3,7 @@ package com.yelman.advertisementserver.api.controller;
 import com.yelman.advertisementserver.api.dto.AdvertisementDto;
 import com.yelman.advertisementserver.api.dto.CommentDto;
 import com.yelman.advertisementserver.api.dto.QuestionsDto;
-import com.yelman.advertisementserver.model.Advertisement;
-import com.yelman.advertisementserver.model.CategoryModel;
+import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.model.enums.AdvertisementOrdersEnum;
 import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
 import com.yelman.advertisementserver.model.enums.StateEnum;
@@ -40,18 +39,13 @@ public class GuestController {
     }
 
     @GetMapping("/categories")
-    public List<CategoryModel> getAll() {
+    public List<Category> getAll() {
         return categoryServices.getParentCategories();
     }
 
     @GetMapping("/{subCategory}")
-    public List<CategoryModel> getSubCategories(@PathVariable String subCategory) {
+    public List<Category> getSubCategories(@PathVariable String subCategory) {
         return categoryServices.getSubCategories(subCategory);
-    }
-
-    @GetMapping("/all")
-    public Advertisement getAllAdvertisements() {
-        return advertisementService.getAllAdvertisements(5);
     }
 
     // verilen katagorideki ürünleri istenilen şekilde sırala
@@ -67,13 +61,16 @@ public class GuestController {
     //istenilen fiyar aralıgına göre sırala
     @GetMapping("/{categoryId}/{minPrice}/{maxPrice}")
     public ResponseEntity<Page<AdvertisementDto>> getCategoryIdMinMaxPriceBetween(
-            @PathVariable long categoryId,
-            @PathVariable BigDecimal maxPrice,
-            @PathVariable BigDecimal minPrice,
+            @PathVariable(required = false) long categoryId,
+            @PathVariable(required = false) BigDecimal maxPrice,
+            @PathVariable(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) SellerTypeEnum sellerType,
+            @RequestParam(required = false) int rate,
+            @RequestParam(required = false) StateEnum state,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "1") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return queryServices.getCategoryIdMinMaxPriceBetween(categoryId, minPrice, maxPrice, pageable);
+        return queryServices.getCategoryIdMinMaxPriceBetween(categoryId, sellerType, rate, state, minPrice, maxPrice, pageable);
     }
 
     @GetMapping("/state")
@@ -111,6 +108,13 @@ public class GuestController {
                                                                 @RequestParam(defaultValue = "5") int page,
                                                                 @RequestParam(defaultValue = "5") int size) {
         return questionsServices.getParentQuestion(advertisementId, page, size);
+    }
+
+    @GetMapping("/sub-questions/{parentId}")
+    public ResponseEntity<Page<QuestionsDto>> getSubQuestionsDto(@PathVariable long parentId,
+                                                                 @RequestParam(defaultValue = "5") int page,
+                                                                 @RequestParam(defaultValue = "5") int size) {
+        return questionsServices.getSubQuestions(parentId, page, size);
     }
 
 
