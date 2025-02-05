@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       author: user
-      id: 17
+      id: 15
       changes:
         - createTable:
             tableName: shopping_comment

@@ -1,6 +1,6 @@
 package com.yelman.photoserver.services;
 
-import com.yelman.photoserver.model.BlogPhotos;
+import com.yelman.photoserver.api.dto.Role;
 import com.yelman.photoserver.model.ShoppingPhoto;
 import com.yelman.photoserver.repository.ShoppingRepository;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,20 @@ public class ShoppingServices {
     }
 
     @Transactional
-    public ResponseEntity<ShoppingPhoto> addPhoto(MultipartFile file, Long blogId, String name) throws IOException {
-        byte[] imageData = file.getBytes();
-        ShoppingPhoto photo = new ShoppingPhoto();
-        photo.setImageData(imageData);
-        photo.setShoppingId(blogId);
-        photo.setBlog_name(name);
-        ShoppingPhoto savedPhoto = photoRepository.save(photo);
-        System.out.println("Fotoğraf kaydedildi: " );
-        return ResponseEntity.ok(savedPhoto);
+    public ResponseEntity<ShoppingPhoto> addPhoto(MultipartFile file, Long blogId, String name, long userId, Role role) throws IOException {
+
+        if (role == Role.ROLE_OWNER || role == Role.ROLE_ADMIN) {
+            byte[] imageData = file.getBytes();
+            ShoppingPhoto photo = new ShoppingPhoto();
+            photo.setImageData(imageData);
+            photo.setShoppingId(blogId);
+            photo.setBlog_name(name);
+            photo.setUserId(userId);
+            ShoppingPhoto savedPhoto = photoRepository.save(photo);
+            System.out.println("Fotoğraf kaydedildi: ");
+            return ResponseEntity.ok(savedPhoto);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // Tüm fotoğrafları listele
@@ -41,27 +46,40 @@ public class ShoppingServices {
     }
 
 
-
     // Fotoğrafı silme
-    public void deletePhoto(long id) {
-        photoRepository.deleteById(id);
+    public ResponseEntity<Void> deletePhoto(long id, Long userId) {
+        ShoppingPhoto photo = photoRepository.findByIdAndUserId(id, userId);
+        if (photo != null) {
+            photoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
-    public ResponseEntity<byte[]>  getById(long photoId) {
+
+    public ResponseEntity<byte[]> getById(long photoId) {
         Optional<ShoppingPhoto> photo = photoRepository.findById(photoId);
 
         if (photo.isPresent()) {
             byte[] imageData = photo.get().getImageData();
-            return  ResponseEntity.ok()
+            return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG) // Veya IMAGE_PNG
                     .body(imageData);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fotoğraf bulunamadı");
         }
     }
+
     @Transactional
-    public  ResponseEntity<List<ShoppingPhoto>> listBlogPhoto(List<Long> id)  {
+    public ResponseEntity<List<ShoppingPhoto>> listBlogPhoto(List<Long> id) {
         List<ShoppingPhoto> photos = photoRepository.findAllById(id);
-        if(photos.isEmpty()) {
+        if (photos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        return ResponseEntity.ok(photos);
+    }
+    public ResponseEntity<List<ShoppingPhoto>> listBlogIdPhoto(long shoppingId) {
+        List<ShoppingPhoto> photos = photoRepository.findByShoppingId(shoppingId);
+        if (photos.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
         return ResponseEntity.ok(photos);

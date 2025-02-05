@@ -1,16 +1,20 @@
 package com.yelman.blogservices.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.LanguageEnum;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
 import lombok.*;
+
+import java.io.Serializable;
 
 @Data
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlogDto {
+
+public class BlogDto  implements Serializable {
     private long id;
     private String title;
     private String metaDescription;
@@ -23,7 +27,4 @@ public class BlogDto {
     private long categories;
     private LanguageEnum language;
     private ShortLangEnum shortLang;
-
-
-
 }

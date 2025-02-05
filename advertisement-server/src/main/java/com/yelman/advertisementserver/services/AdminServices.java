@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class AdminServices {
         this.userStoreMapper = userStoreMapper;
     }
 
+    @Transactional
     public ResponseEntity<HttpEntity<String>> getStoreAccept(long id) {
         UserStore store = userStoreRepository.findById(id).orElse(null);
         if (store != null) {
@@ -37,6 +39,7 @@ public class AdminServices {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Transactional
     public ResponseEntity<HttpEntity<String>> getAdvertisementAccept(long id) {
         Optional<Advertisement> store = advertisementRepository.findById(id);
         if (store.isPresent()) {
@@ -47,10 +50,23 @@ public class AdminServices {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Transactional
     public List<UserStoreDto> getUserStore(ActiveEnum active) {
         List<UserStore> store = userStoreRepository.findByIsActive(active).get();
         List<UserStoreDto> dtos = store.stream().map(userStoreMapper::entityToDto).toList();
         return dtos;
+    }
+
+    @Transactional
+    public ResponseEntity<String> removeStoreAndAdvertisement(long id) {
+        UserStore store = userStoreRepository.findById(id).orElse(null);
+        if (store != null) {
+            List<Advertisement> advertisementList = advertisementRepository.findByUserStoreId(id);
+            advertisementRepository.deleteAll(advertisementList);
+            userStoreRepository.delete(store);
+            return ResponseEntity.ok(store.getName() + " adlı magzanın" + advertisementList.size() + " urunleri ve magza silindi  ");
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 

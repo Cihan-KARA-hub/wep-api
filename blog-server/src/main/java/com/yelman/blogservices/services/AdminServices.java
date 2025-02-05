@@ -3,15 +3,14 @@ package com.yelman.blogservices.services;
 import com.yelman.blogservices.model.blog.Blogs;
 import com.yelman.blogservices.model.blog.Category;
 import com.yelman.blogservices.model.enums.ActiveEnum;
-import com.yelman.blogservices.repository.blog.BlogRepository;
-import com.yelman.blogservices.repository.blog.CategoryRepository;
+import com.yelman.blogservices.repository.BlogRepository;
+import com.yelman.blogservices.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -87,15 +86,6 @@ public class AdminServices {
 
         categoryRepository.save(newCategory);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    // belemede olan blokları getir
-    public ResponseEntity<HttpStatus> getWaitingBlogs(ActiveEnum activeEnum) {
-        List<Blogs> waitingBlogs = blogRepository.findByIsActive(activeEnum);
-        if (waitingBlogs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

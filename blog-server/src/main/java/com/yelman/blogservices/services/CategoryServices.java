@@ -1,6 +1,6 @@
 package com.yelman.blogservices.services;
 
-import com.yelman.blogservices.repository.blog.CategoryRepository;
+import com.yelman.blogservices.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,6 +9,7 @@ public class CategoryServices {
     public CategoryServices(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
+
 
 
 

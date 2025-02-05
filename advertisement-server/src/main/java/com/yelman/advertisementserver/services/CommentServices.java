@@ -9,8 +9,9 @@ import com.yelman.advertisementserver.model.enums.Role;
 import com.yelman.advertisementserver.repository.AdvertisementRepository;
 import com.yelman.advertisementserver.repository.CommentRepository;
 import com.yelman.advertisementserver.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +35,7 @@ public class CommentServices {
         this.commentMapper = commentMapper;
     }
 
+    @CacheEvict(value = {"advertisement_comment_get"}, allEntries = true)
     @Transactional
     public ResponseEntity<HttpStatus> createComment(CommentDto commentDto) {
         Comment comment = new Comment();
@@ -59,7 +60,7 @@ public class CommentServices {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
+    @CacheEvict(value = {"advertisement_comment_get"}, allEntries = true)
     @Transactional
     public ResponseEntity<HttpStatus> deleteComment(long id, long userId) {
         Comment data = commentRepository.findById(id).orElse(null);
@@ -70,6 +71,8 @@ public class CommentServices {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @Cacheable(cacheNames = "advertisement_comment_get", key = "#root.methodName", unless = "#result == null")
+    @Transactional
     public ResponseEntity<Page<CommentDto>> getComment(long advertisement, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> dataPage = commentRepository.findByAdvertisement_Id(advertisement, pageable);
@@ -80,6 +83,18 @@ public class CommentServices {
                 .map(commentMapper::toDto);
 
         return ResponseEntity.ok(dtoList);
+    }
+
+    @CacheEvict(value = {"advertisement_comment_get"}, allEntries = true)
+    @Transactional
+    public ResponseEntity<HttpStatus> updateComment(long id, String comment, long userId) {
+        Comment data = commentRepository.findById(id).orElse(null);
+        if (data != null && data.getUser().getId() == userId) {
+            data.setContent(comment);
+            commentRepository.save(data);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }

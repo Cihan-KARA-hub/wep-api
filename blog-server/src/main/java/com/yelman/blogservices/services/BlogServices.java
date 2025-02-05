@@ -1,18 +1,20 @@
 package com.yelman.blogservices.services;
 
 import com.yelman.blogservices.api.dto.BlogDto;
+import com.yelman.blogservices.api.dto.BlogPatchDto;
 import com.yelman.blogservices.api.mapper.BlogMapper;
 import com.yelman.blogservices.model.blog.Blogs;
-
 import com.yelman.blogservices.model.blog.Role;
 import com.yelman.blogservices.model.blog.User;
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
-import com.yelman.blogservices.repository.blog.BlogRepository;
-
-import com.yelman.blogservices.repository.blog.UserRepository;
+import com.yelman.blogservices.repository.BlogRepository;
+import com.yelman.blogservices.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,9 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,40 +41,6 @@ public class BlogServices {
         this.userRepository = userRepository;
 
     }
-
-    @Transactional
-    public ResponseEntity<HttpStatus> createBlog(BlogDto blogdto) throws IOException {
-        Optional<User> user = userRepository.findByUsername(blogdto.getUserName());
-        if (!user.get().getAuthorities().contains(Role.valueOf("ROLE_SUBSCRIBE"))) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-        Blogs blogs = blogMapper.mapEntity(blogdto);
-        blogs.setSlug(toSlug(blogdto.getTitle()));
-        blogs.setIsActive(ActiveEnum.WAITING);
-        int val = blogdto.getLanguage().ordinal();
-        blogs.setShortLang(ShortLangEnum.values()[val]);
-        blogRepository.save(blogs);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    //TODO cache kullanılacak
-    @Transactional
-    public ResponseEntity<Void> incrementReadCount(long blogId) {
-        Optional<Blogs> blog = blogRepository.findById(blogId);
-        if (blog.isPresent()) {
-            Blogs blogsToIncrement = blog.get();
-            blogsToIncrement.setReadCount(blogsToIncrement.getReadCount() + 1);
-            blogRepository.save(blogsToIncrement);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
-    public Page<Blogs> getAllUserBlog(String userName, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return blogRepository.findByAuthor_Username(userName, pageable);
-    }
-
 
     private static String toSlug(String input) {
         if (input == null || input.isEmpty()) {
@@ -102,7 +70,94 @@ public class BlogServices {
 
         return slug;
     }
+    @CacheEvict(value = {
+            "blog_est_new",
+            "blog_dynamic_query",
+            "blog_user_blog"
+    }, allEntries = true)
+    @Transactional
+    public ResponseEntity<HttpStatus> createBlog(BlogDto blogdto) throws IOException {
+        Optional<User> user = userRepository.findByUsernameAndEnabledIsTrue(blogdto.getUserName());
+        if (!user.get().getAuthorities().contains(Role.valueOf("ROLE_SUBSCRIBE"))) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        Blogs blogs = blogMapper.mapEntity(blogdto);
+        blogs.setSlug(toSlug(blogdto.getTitle()));
+        blogs.setIsActive(ActiveEnum.WAITING);
+        int val = blogdto.getLanguage().ordinal();
+        blogs.setShortLang(ShortLangEnum.values()[val]);
+        blogRepository.save(blogs);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
+    @CacheEvict(value = {
+            "blog_est_new",
+            "blog_dynamic_query",
+            "blog_user_blog"
+    }, allEntries = true)
+    @Transactional
+    public ResponseEntity<Void> incrementReadCount(long blogId) {
+        Optional<Blogs> blog = blogRepository.findById(blogId);
+        if (blog.isPresent()) {
+            Blogs blogsToIncrement = blog.get();
+            blogsToIncrement.setReadCount(blogsToIncrement.getReadCount() + 1);
+            blogRepository.save(blogsToIncrement);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+    @Cacheable(value = "blog_user_blog", key = "#userName+'_'+#page + '_' + #size")
+    public Page<BlogDto> getAllUserBlog(String userName,Pageable page ) {
+        Page<Blogs> blog = blogRepository.findByAuthor_Username(userName, page);
+        Page<BlogDto> dto = blog.map(blogMapper::mapDto);
+        if (dto.isEmpty()) {
+            return null;
+        }
+        return dto;
+    }
+    @CacheEvict(value = {
+            "blog_est_new",
+            "blog_dynamic_query",
+            "blog_user_blog"
+    }, allEntries = true)
+    public ResponseEntity<HttpStatus> deleteBlog(long blogId, long userId) {
+        Optional<Blogs> blog = blogRepository.findById(blogId);
+        User user = userRepository.findByIdAndEnabledIsTrue(userId);
+        if (blog.isPresent() && blog.get().getAuthor().getId() == user.getId()) {
+            blogRepository.delete(blog.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    @CacheEvict(value = {
+            "blog_est_new",
+            "blog_dynamic_query",
+            "blog_user_blog"
+    }, allEntries = true)
+    public ResponseEntity<HttpStatus> patchBlog(long blogId, long userId, BlogPatchDto blogUpdateDto) {
+        Optional<Blogs> blog = blogRepository.findById(blogId);
+        User user = userRepository.findByIdAndEnabledIsTrue(userId);
+        if (blog.isPresent() && blog.get().getAuthor().getId() == user.getId()) {
+            Blogs blogToUpdate = blog.get();
+            BeanUtils.copyProperties(blogUpdateDto, blogToUpdate, getNullPropertyNames(blogUpdateDto));
+            blogRepository.save(blogToUpdate);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
+    private String[] getNullPropertyNames(Object source) {
+        return java.util.Arrays.stream(source.getClass().getDeclaredFields())
+                .filter(field -> {
+                    field.setAccessible(true);
+                    try {
+                        return field.get(source) == null;
+                    } catch (IllegalAccessException e) {
+                        return false;
+                    }
+                })
+                .map(field -> field.getName())
+                .toArray(String[]::new);
+    }
 }
 

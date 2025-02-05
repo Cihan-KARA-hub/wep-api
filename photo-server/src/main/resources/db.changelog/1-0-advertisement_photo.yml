@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      author: cio
+      id: 1
+      changes:
+        - createTable:
+            tableName: advertisement_photo
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: photo_data
+                  type: BYTEA
+                  constraints:
+                    nullable: false
+              - column:
+                  name: photo_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: advertisement_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+

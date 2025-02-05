@@ -11,6 +11,5 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-        List<Comment> findByAdvertisement_Id(Long advertisement_id);
         Page<Comment> findByAdvertisement_Id(long advertisementId, Pageable pageable);
 }

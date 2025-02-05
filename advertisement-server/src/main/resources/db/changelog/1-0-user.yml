@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: user
+      author: cihan
       changes:
         - createTable:
             tableName: users
@@ -36,12 +36,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: account_non_expired
+                  name: enabled
                   type: BOOLEAN
                   constraints:
                     nullable: false
               - column:
-                  name: enabled
+                  name: account_non_expired
                   type: BOOLEAN
                   constraints:
                     nullable: false
@@ -57,8 +57,8 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 4
-      author: user
+      id: 2
+      author: cihan
       changes:
         - createTable:
             tableName: authorities
@@ -70,14 +70,16 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: role
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
-
+        - addPrimaryKey:
+            columnNames: user_id, role
+            constraintName: pk_authorities
+            tableName: authorities
         - addForeignKeyConstraint:
             baseTableName: authorities
             baseColumnNames: user_id
             constraintName: fk_authorities_users
             referencedTableName: users
             referencedColumnNames: id
-            onDelete: CASCADE

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "advertisement_question")
-public class Questions {
+public class Questions  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)

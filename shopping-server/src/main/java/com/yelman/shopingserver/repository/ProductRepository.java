@@ -2,6 +2,7 @@ package com.yelman.shopingserver.repository;
 
 import com.yelman.shopingserver.model.Product;
 import com.yelman.shopingserver.model.QProduct;
+import com.yelman.shopingserver.model.Store;
 import com.yelman.shopingserver.model.enums.CurrencyEnum;
 import com.yelman.shopingserver.model.enums.SellerTypeEnum;
 import org.springframework.data.domain.Page;
@@ -28,5 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Queryds
     Page<Product> findByShoppingStore_Id(long shoppingStore, Pageable pageable);
 
     Page<Product> findByCurrency(CurrencyEnum currency, Pageable pageable);
+
+    void deleteAllByShoppingStoreId(Long shoppingStore_id);
 
 }

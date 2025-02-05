@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @NoArgsConstructor
@@ -19,7 +20,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @Table(name = "advertisement_user_store")
-public class UserStore {
+public class UserStore  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

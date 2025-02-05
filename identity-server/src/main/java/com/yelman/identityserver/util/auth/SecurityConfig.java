@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,10 +37,21 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x ->
-                        x.requestMatchers("/auth/welcome/**", "/auth/addNewUser/**", "/auth/generateToken/**","/auth/guest",".well-known").permitAll()
+                        x.requestMatchers("/auth/welcome/**",
+                                "/auth/create-user/**",
+                                "/auth/verify-email/**",
+                                "/auth/generateToken/**",
+                                "/auth/guest/**",
+                                "/login/**",
+                                "/auth/user**",
+                                "/auth/delete/**",
+                                "/auth//login/google/**",
+                                "/auth/reset-password/**",
+                                "/auth/send-reset-password/**").permitAll()
                 )
                 .authorizeHttpRequests(x ->
                         x.requestMatchers("/auth/user").authenticated()
+                                .requestMatchers("/auth/admin").hasRole("ADMIN")
                                 .requestMatchers("/auth/admin").hasRole("ADMIN")
                                 .requestMatchers("/auth/owner").hasRole("OWNER")
                                 .requestMatchers("/auth/subscribe").hasRole("SUBSCRIBE")

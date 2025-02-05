@@ -1,6 +1,8 @@
 package com.yelman.advertisementserver.model.enums;
 
-public enum Role  {
+import java.io.Serializable;
+
+public enum  Role implements Serializable {
 
     ROLE_ADMIN("ADMIN"),
     ROLE_SUBSCRIBE("SUBSCRIBE"),

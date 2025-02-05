@@ -2,7 +2,9 @@ package com.yelman.advertisementserver.model.enums;
 
 import lombok.Getter;
 
-public enum StatusEnum {
+import java.io.Serializable;
+
+public enum StatusEnum implements Serializable {
     FOR_SALE("Satılık"),
     SOLD("Satıldı");
 

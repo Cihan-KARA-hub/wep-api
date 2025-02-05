@@ -1,6 +1,8 @@
 package com.yelman.advertisementserver.model.enums;
 
-public enum StateEnum {
+import java.io.Serializable;
+
+public enum StateEnum implements Serializable {
     NEW("Sıfır"),
     SECOND_HAND("İkinci El");
 

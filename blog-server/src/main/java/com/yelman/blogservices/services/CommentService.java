@@ -1,7 +1,7 @@
 package com.yelman.blogservices.services;
 
 import com.yelman.blogservices.model.blog.Comments;
-import com.yelman.blogservices.repository.blog.CommentRepository;
+import com.yelman.blogservices.repository.CommentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

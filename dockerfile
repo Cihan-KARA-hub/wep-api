@@ -8,15 +8,11 @@ WORKDIR /backend
 COPY . ./
 RUN mvn clean package -DskipTests
 
-
 FROM openjdk:17-jdk
-
 
 ARG JAR_FILE=target/*.jar
 
-
 WORKDIR /app
-
 
 COPY --from=builder /app/${JAR_FILE} app.jar
 

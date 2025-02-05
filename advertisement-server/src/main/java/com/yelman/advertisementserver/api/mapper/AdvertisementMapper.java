@@ -2,6 +2,7 @@ package com.yelman.advertisementserver.api.mapper;
 
 import com.yelman.advertisementserver.api.dto.AdvertisementDto;
 import com.yelman.advertisementserver.api.dto.AdvertisementDtoSecond;
+import com.yelman.advertisementserver.api.dto.AdvertisementUpdateDto;
 import com.yelman.advertisementserver.model.Advertisement;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -18,4 +19,6 @@ public interface AdvertisementMapper  {
     Advertisement toEntity(AdvertisementDto advertisementDto);
 
     Advertisement toEntites(AdvertisementDtoSecond advertisementDto);
+
+    Advertisement toUpdate(AdvertisementUpdateDto advertisement);
 }

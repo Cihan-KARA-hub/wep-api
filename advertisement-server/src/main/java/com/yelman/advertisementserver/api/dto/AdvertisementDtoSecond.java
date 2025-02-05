@@ -7,6 +7,7 @@ import com.yelman.advertisementserver.model.enums.StateEnum;
 import com.yelman.advertisementserver.model.enums.StatusEnum;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdvertisementDtoSecond {
+public class AdvertisementDtoSecond implements Serializable {
     private Long id;
     private String title;
     private String description;

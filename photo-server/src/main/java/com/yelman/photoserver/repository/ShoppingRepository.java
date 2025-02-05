@@ -1,5 +1,6 @@
 package com.yelman.photoserver.repository;
 
+import com.yelman.photoserver.model.AdvertisementPhoto;
 import com.yelman.photoserver.model.ShoppingPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,4 +12,6 @@ import java.util.List;
 public interface ShoppingRepository extends JpaRepository<ShoppingPhoto, Long> {
     @Query("SELECT p FROM ShoppingPhoto p WHERE p.id IN :ids")
     List<ShoppingRepository> findByIds(@Param("ids") List<Long> ids);
+    ShoppingPhoto findByIdAndUserId(long id, long userId);
+    List<ShoppingPhoto> findByShoppingId(long shoppingId);
 }

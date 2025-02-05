@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.annotation.EnumNaming;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
+import java.io.Serializable;
 
-public enum AdvertisementOrdersEnum
+
+public enum  AdvertisementOrdersEnum implements Serializable
 {
     desc,
     asc

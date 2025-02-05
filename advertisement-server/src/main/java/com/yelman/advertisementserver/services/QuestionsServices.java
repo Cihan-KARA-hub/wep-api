@@ -102,6 +102,7 @@ public class QuestionsServices {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @Transactional
     public ResponseEntity<Page<QuestionsDto>> getParentQuestion(long advertisementId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Questions> data = questionsRepository.findAllByAdvertisement_IdAndParentId(pageable, advertisementId, 0);
@@ -112,6 +113,7 @@ public class QuestionsServices {
 
     }
 
+    @Transactional
     public ResponseEntity<Page<QuestionsDto>> getSubQuestions(long parentId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (parentId == 0) return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -121,7 +123,8 @@ public class QuestionsServices {
         return ResponseEntity.ok(dtoPage);
     }
 
-    private void sendEmail(Advertisement advertisement, UserStore user, QuestionsDto questionsDto) {
+    @Transactional
+    protected void sendEmail(Advertisement advertisement, UserStore user, QuestionsDto questionsDto) {
         EmailSendDto dto = new EmailSendDto();
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, HH:mm:ss");
         String formattedDate = sdf.format(new Date());

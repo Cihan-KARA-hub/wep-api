@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Setter
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "advertisement_comment")
-public class Comment {
+public class Comment  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)

@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>blog-server</module>
-        <module>config-server</module>
         <module>identity-server</module>
         <module>advertisement-server</module>
         <module>shopping-server</module>

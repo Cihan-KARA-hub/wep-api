@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      author: cihan
+      id: 30
+      changes:
+        - createTable:
+            tableName: verification_token
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: token
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expiry_date
+                  type: TIMESTAMP
+
+  - changeSet:
+      author: cihan
+      id: 31
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: verification_token
+            baseColumnNames: user_id
+            constraintName: fk_verification_token_user
+            referencedTableName: user
+            referencedColumnNames: id
+            onDelete: CASCADE

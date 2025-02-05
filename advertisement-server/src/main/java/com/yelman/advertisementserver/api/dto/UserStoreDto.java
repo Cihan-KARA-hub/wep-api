@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserStoreDto {
+public class UserStoreDto implements Serializable {
     private long id;
     private String email;
     private String phoneNumber;

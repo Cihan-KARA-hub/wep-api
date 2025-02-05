@@ -8,6 +8,7 @@ import com.yelman.shopingserver.model.Store;
 import com.yelman.shopingserver.model.User;
 import com.yelman.shopingserver.model.enums.ActiveEnum;
 import com.yelman.shopingserver.model.enums.Role;
+import com.yelman.shopingserver.repository.ProductRepository;
 import com.yelman.shopingserver.repository.StoreRepository;
 import com.yelman.shopingserver.repository.UserRepository;
 import com.yelman.shopingserver.utils.email.EmailServices;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StoreServices {
@@ -28,18 +30,21 @@ public class StoreServices {
     private final LocationService locationService;
     private final UserStoreMapper userStoreMapper;
     private final EmailServices emailServices;
+    private final ProductRepository productRepository;
 
-    public StoreServices(UserRepository userRepository, StoreRepository storeRepository, LocationService locationService, UserStoreMapper userStoreMapper, EmailServices emailServices) {
+
+    public StoreServices(UserRepository userRepository, StoreRepository storeRepository, LocationService locationService, UserStoreMapper userStoreMapper, EmailServices emailServices, ProductRepository productRepository) {
         this.userRepository = userRepository;
         this.storeRepository = storeRepository;
         this.locationService = locationService;
         this.userStoreMapper = userStoreMapper;
         this.emailServices = emailServices;
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public ResponseEntity<UserStoreDto> addStore(UserStoreDto userStoredto) {
-        User user = userRepository.findByEmail(userStoredto.getEmail()).orElse(null);
+        User user = userRepository.findByEmailAndEnabledIsTrue(userStoredto.getEmail()).orElse(null);
         if (user != null) {
             if (user.getAuthorities().contains(Role.ROLE_OWNER) && user.isEnabled()) {
                 LocationDto location = locationService.getLocation(userStoredto.getCountry(), userStoredto.getCity(), userStoredto.getDistrict());
@@ -48,8 +53,8 @@ public class StoreServices {
                 userStore.setCity(location.getSehirler().getTitle());
                 userStore.setDistrict(location.getIlceler().getTitle());
                 if (storeRepository.findByStoreName(userStoredto.getStoreName()).isPresent()) {
-                    int a= (int) (Math.random()*11);
-                    userStore.setStoreName(userStoredto.getStoreName() +a);
+                    int a = (int) (Math.random() * 11);
+                    userStore.setStoreName(userStoredto.getStoreName() + a);
                 }
                 userStore.setIsActive(ActiveEnum.WAITING);
                 userStore.setAuthor(user);
@@ -71,12 +76,19 @@ public class StoreServices {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    // magza ve ürünlerini siler
     @Transactional
-    public ResponseEntity<HttpStatus> DeleteUserStore(long id) {
+    public ResponseEntity<HttpStatus> DeleteUserStore(long id, long userId) {
         Store userStore = storeRepository.findById(id).orElse(null);
-        if (userStore != null) {
-            storeRepository.delete(userStore);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userStore != null && userOptional.isPresent()) {
+            if (userOptional.get().getAuthorities().contains(Role.ROLE_ADMIN) || userOptional.get().getId() == userStore.getAuthor().getId()) {
+                productRepository.deleteAllByShoppingStoreId(userStore.getId());
+                storeRepository.deleteById(userStore.getId());
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

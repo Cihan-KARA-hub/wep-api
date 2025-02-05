@@ -16,6 +16,7 @@ import com.yelman.shopingserver.model.enums.OrdersEnum;
 import com.yelman.shopingserver.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -43,8 +44,9 @@ public class QueryServices {
     }
 
     // ülke sehir ilçe  için dinamik sorgu
+    @Cacheable(value = "storeLocation", key = "#country + '-' + #city + '-' + #district + '-' + #page + '-' + #size")
     @Transactional
-    public ResponseEntity<Page<UserStoreDto>> getCountOrCityOrDistrict(String country, String city, String district, int page, int size) {
+    public Page<UserStoreDto> getCountOrCityOrDistrict(String country, String city, String district, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QStore store = QStore.store;
@@ -66,8 +68,8 @@ public class QueryServices {
                 .fetch();
         Long total = queryFactory.selectFrom(store).where(whereClause).fetchCount();
         List<UserStoreDto> dto = data.stream().map(userStoreMapper::entityToDto).toList();
-        if (total == null) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(new PageImpl<>(dto, pageable, total));
+        if (total == null) return null;
+        return new PageImpl<>(dto, pageable, total);
     }
 
     /**
@@ -101,8 +103,9 @@ public class QueryServices {
     }
 
     //istenilen fiyar aralıgına göre sırala
+    @Cacheable(value = "priceRange", key = "#categoryId + '-' + #minPrice + '-' + #maxPrice + '-' + #page + '-' + #size")
     @Transactional
-    public ResponseEntity<Page<ProductDto>> getCategoryIdMinMaxPriceBetween(Long category, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+    public Page<ProductDto> getCategoryIdMinMaxPriceBetween(Long category, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QProduct product = QProduct.product;
 
@@ -131,12 +134,13 @@ public class QueryServices {
 
         Page<ProductDto> resultPage = new PageImpl<>(dtoList, pageable, total);
 
-        return ResponseEntity.ok(resultPage);
+        return resultPage;
     }
 
     // category ,yıldız, en düşük fiyattan,en yüksek fiyattan
+    @Cacheable(value = "filter", key = "#category + '-' + #brand + '-' + #rate + '-' + #ordersEnum + '-' + #page + '-' + #size")
     @Transactional
-    public ResponseEntity<Page<ProductDto>> getCategoryAndBradAndRateAndOrder(
+    public Page<ProductDto> getCategoryAndBradAndRateAndOrder(
             Long categoryId, String brand, Integer rate,
             OrdersEnum ordersEnum, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -164,23 +168,19 @@ public class QueryServices {
                 .fetch();
         long total = queryFactory.select(product.count()).from(product).where(whereClause).fetchOne();
         List<ProductDto> dto = products.stream().map(productMapper::entityToDto).toList();
-        if (total == 0) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(new PageImpl<>(dto, pageable, total));
+        if (total == 0) return null;
+        return new PageImpl<>(dto, pageable, total);
     }
 
     @Transactional
     public List<ProductDto> searchProducts(String keyword) {
         QProduct qProduct = QProduct.product;
-
-
         BooleanBuilder builder = new BooleanBuilder();
-
         if (keyword != null && !keyword.isEmpty()) {
             builder.or(qProduct.title.containsIgnoreCase(keyword));
             builder.or(qProduct.description.containsIgnoreCase(keyword));
         }
         List<Product> products = (List<Product>) productRepository.findAll(builder);
-
         return products.stream()
                 .map(productMapper::entityToDto)
                 .toList();

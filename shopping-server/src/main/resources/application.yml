@@ -5,7 +5,7 @@ spring:
     config:
       enabled: false
   datasource:
-    url: ${CHARGE_STATION_DB:jdbc:postgresql://localhost:5432/advertisement_db}
+    url: ${DB_POSTGRES_URL_FIRST}
     username: ilan_admin
     password: ilan_admin123
     driver-class-name: org.postgresql.Driver
@@ -40,12 +40,12 @@ spring:
           protocol: smtp
 # security
 
-cloud:
-  eureka:
-      client:
-        service-url:
-          defaultZone: http://localhost:8761/eureka/
-  instance:
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL}
+instance:
     preferIpAddress: true
 
 

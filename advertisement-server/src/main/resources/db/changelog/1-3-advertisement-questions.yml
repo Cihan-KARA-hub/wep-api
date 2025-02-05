@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 7
+      id: 8
       author: user
       changes:
         - createTable:
@@ -29,6 +29,11 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_advertisement_question_user
                     references: users(id)
+              - column:
+                  name: parent_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
               - column:
                   name: advertisement_id
                   type: BIGINT

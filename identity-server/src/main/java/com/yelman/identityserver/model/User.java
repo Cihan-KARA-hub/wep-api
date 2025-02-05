@@ -2,6 +2,7 @@ package com.yelman.identityserver.model;
 
 import com.yelman.identityserver.model.role.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "username", unique = true, nullable = false)
     private String username;
+    @Email
     @Column(name = "email", unique = true, nullable = false)
     private String email;
     @Column(name = "password", nullable = false)
@@ -45,6 +47,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> authorities;
 
+    public @Email String getEmail() {
+        return email;
+    }
+
     public Long getId() {
         return id;
     }
@@ -61,6 +67,10 @@ public class User implements UserDetails {
     @Override
     public String getPassword() {
         return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -86,5 +96,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return this.enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

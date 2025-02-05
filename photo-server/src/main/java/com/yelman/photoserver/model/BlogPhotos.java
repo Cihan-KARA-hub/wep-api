@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +15,8 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "blog_photo")
+@Getter
+@Setter
 public class BlogPhotos {
 
     @Id
@@ -29,56 +32,10 @@ public class BlogPhotos {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getBlogName() {
-        return blogName;
-    }
-
-    public Long getBlogId() {
-        return blogId;
-    }
-
-    public byte[] getImageData() {
-        return imageData;
-    }
-
-    public long getId() {
-        return id;
-    }
-
+    @Column(name = "user_id")
+    private long userId;
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setImageData(byte[] imageData) {
-        this.imageData = imageData;
-    }
-
-    public void setBlogId(Long blogId) {
-        this.blogId = blogId;
-    }
-
-    public void setBlogName(String blogName) {
-        this.blogName = blogName;
-    }
-
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

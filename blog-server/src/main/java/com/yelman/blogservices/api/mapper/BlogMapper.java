@@ -4,8 +4,8 @@ import com.yelman.blogservices.api.dto.BlogDto;
 import com.yelman.blogservices.model.blog.Blogs;
 import com.yelman.blogservices.model.blog.Category;
 import com.yelman.blogservices.model.blog.User;
-import com.yelman.blogservices.repository.blog.CategoryRepository;
-import com.yelman.blogservices.repository.blog.UserRepository;
+import com.yelman.blogservices.repository.CategoryRepository;
+import com.yelman.blogservices.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,6 +31,7 @@ public class BlogMapper implements BlogMappers {
         blogDto.setIsActive(blogs.getIsActive());
         blogDto.setMetaDescription(blogs.getMetaDescription());
         blogDto.setUserName(blogs.getAuthor().getUsername());
+        blogDto.setName(blogs.getAuthor().getUsername());
         blogDto.setReadingSecond(blogs.getReadingSecond());
         blogDto.setCategories(blogs.getCategory().getId());
         blogDto.setLanguage(blogs.getLanguage());
@@ -71,7 +72,7 @@ public class BlogMapper implements BlogMappers {
 
     private User findUserById(String id) {
         if (id != null) {
-            return userRepository.findByUsername(id).orElse(null);
+            return userRepository.findByUsernameAndEnabledIsTrue(id).orElse(null);
         }
         return null;
     }

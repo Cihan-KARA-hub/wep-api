@@ -16,6 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -31,7 +32,6 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @JsonIgnore
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
     @JsonIgnore

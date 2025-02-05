@@ -26,10 +26,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/shopping/categories/**").permitAll() // Rollere göre yetkilendirme.
+                        .requestMatchers("/shopping/guest/**").permitAll()
                         .requestMatchers("/shopping/comment/create").hasAnyRole("SUBSCRIBE", "ADMIN", "OWNER")
                         .requestMatchers("/shopping/product/**").hasAnyRole("SUBSCRIBE", "ADMIN", "OWNER")
                         .requestMatchers("/shopping/store/**").hasAnyRole("SUBSCRIBE", "ADMIN", "OWNER")
+                        .requestMatchers("/shopping/categories-manager/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -39,7 +40,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

@@ -2,8 +2,10 @@ package com.yelman.advertisementserver.model.enums;
 
 import lombok.Getter;
 
+import java.io.Serializable;
 
-public enum CurrencyEnum {
+
+public enum CurrencyEnum implements Serializable {
     USD("USD", "$"),
     EUR("EUR", "€"),
     GBP("GBP", "£"),

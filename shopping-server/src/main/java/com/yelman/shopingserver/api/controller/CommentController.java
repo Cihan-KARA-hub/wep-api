@@ -2,10 +2,10 @@ package com.yelman.shopingserver.api.controller;
 
 import com.yelman.shopingserver.api.dto.ShopCommentDto;
 import com.yelman.shopingserver.sevice.CommentServices;
-import org.springframework.data.domain.Page;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,27 +17,27 @@ public class CommentController {
         this.commentService = commentService;
     }
     @PostMapping("/create")
-    @PreAuthorize("hasAnyRole('SUBSCRIBE')")
+    @PreAuthorize("hasAnyRole('SUBSCRIBE','OWNER')")
     public ResponseEntity<Void> addComment(@RequestBody ShopCommentDto comment) {
         return commentService.addComment(comment);
     }
-
+    @PreAuthorize("hasAnyRole('SUBSCRIBE','OWNER')")
     @PostMapping("/sub-comment")
     public ResponseEntity<Void> addSubComment(@RequestBody ShopCommentDto comment) {
         return commentService.addSubComment(comment);
     }
-
     //alt yprumlar da silinir
+    @PreAuthorize("hasAnyRole('SUBSCRIBE','OWNER','ADMIN')")
     @DeleteMapping("/delete/{comment}/{userId}")
     public ResponseEntity<Void> deleteParentComment(@PathVariable long comment,@PathVariable long userId) {
         return commentService.deleteParentComment(comment, userId);
     }
-
+    @PreAuthorize("hasAnyRole('SUBSCRIBE','OWNER','ADMIN')")
     @DeleteMapping("/sub-delete/{comment}/{userId}")
     public ResponseEntity<Void> deleteSubComment(@PathVariable long comment,@PathVariable long userId) {
         return commentService.deleteSubComment(comment, userId);
     }
-
+    @PreAuthorize("hasAnyRole('SUBSCRIBE','OWNER','ADMIN')")
     @PutMapping("/update/{commentId}")
     public ResponseEntity<Void> UpdateComment(@RequestParam long userId,
                                               @RequestParam String content,
@@ -45,17 +45,5 @@ public class CommentController {
         return commentService.updateComment(userId,content,commentId);
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<Page<ShopCommentDto>> getParentComment(@RequestParam long productId,
-                                                                 @RequestParam(defaultValue = "4") int size,
-                                                                 @RequestParam(defaultValue = "1") int page) {
-        return commentService.getParentComment(productId, page, size);
-    }
 
-    @GetMapping("/sub-comments")
-    public ResponseEntity<Page<ShopCommentDto>> getSubComment(@RequestParam long parentId,
-                                                              @RequestParam(defaultValue = "4") int size,
-                                                              @RequestParam(defaultValue = "1") int page) {
-        return commentService.getSubComment(parentId, page, size);
-    }
 }

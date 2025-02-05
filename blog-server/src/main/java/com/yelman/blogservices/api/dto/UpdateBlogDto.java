@@ -2,13 +2,14 @@ package com.yelman.blogservices.api.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateBlogDto {
+public class UpdateBlogDto  implements Serializable {
     private int id;
     private String title;
     private String metaDescription;

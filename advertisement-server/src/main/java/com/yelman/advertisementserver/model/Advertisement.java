@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
@@ -15,7 +16,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Builder
 @Table(name = "advertisement")
-public class Advertisement {
+public class Advertisement  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.yelman.advertisementserver.repository;
 
 import com.querydsl.core.types.dsl.StringPath;
+import com.yelman.advertisementserver.model.Advertisement;
 import com.yelman.advertisementserver.model.enums.ActiveEnum;
 import com.yelman.advertisementserver.model.QUserStore;
 import com.yelman.advertisementserver.model.UserStore;

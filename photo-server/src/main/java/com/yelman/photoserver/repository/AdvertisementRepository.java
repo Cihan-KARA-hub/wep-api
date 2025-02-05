@@ -11,5 +11,7 @@ import java.util.List;
 public interface AdvertisementRepository extends JpaRepository<AdvertisementPhoto, Long> {
     @Query("SELECT p FROM AdvertisementPhoto p WHERE p.id IN :ids")
     List<AdvertisementRepository> findByIds(@Param("ids") List<Long> ids);
+    AdvertisementPhoto findByIdAndUserId(long id, long userId);
+    List<AdvertisementPhoto> findByAdvertisementId(Long advertisementId);
 
 }

@@ -7,12 +7,11 @@ import com.yelman.blogservices.api.dto.BlogDto;
 import com.yelman.blogservices.api.mapper.BlogMapper;
 import com.yelman.blogservices.model.blog.Blogs;
 import com.yelman.blogservices.model.blog.QBlogs;
-
 import com.yelman.blogservices.model.enums.ActiveEnum;
 import com.yelman.blogservices.model.enums.ShortLangEnum;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,17 +25,18 @@ import java.util.List;
 @Service
 public class DinamicBlogServices {
 
+    private final BlogMapper blogMapper;
     @PersistenceContext
     private EntityManager entityManager;
-    private  final BlogMapper blogMapper;
 
     public DinamicBlogServices(BlogMapper blogMapper) {
         this.blogMapper = blogMapper;
     }
 
-
+    // cache  at
+    @Cacheable(value = "blog_dynamic_query", key = "#categoryId + '_' + #page + '_' + #size+'_'+#authorId+'_'+#language")
     @Transactional
-    public ResponseEntity<Page<BlogDto>> getDynamicQuery(Long categoryId, Long authorId, ShortLangEnum language, int page, int size) {
+    public Page<BlogDto> getDynamicQuery(Long categoryId, Long authorId, ShortLangEnum language, int page, int size) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QBlogs blogs = QBlogs.blogs;
 
@@ -60,26 +60,11 @@ public class DinamicBlogServices {
                 .fetchResults();
 
         List<Blogs> blogList = results.getResults();
-        long total = results.getTotal();
-
-        if (blogList.isEmpty()) {
-            return ResponseEntity.ok(Page.empty());
-        }
-
-        // Fotoğraf bilgisi olmadan sadece blogları içeren liste oluşturuluyor
-        List<BlogDto> combinedList = blogList.stream()
-                .map(blog -> {
-                    BlogDto dto = new BlogDto();
-                    blogMapper.mapDto(blog);
-                    return dto; // Fotoğraf kısmı kaldırıldı
-                })
-                .toList();
-
-        Page<BlogDto> pageResult = new PageImpl<>(combinedList, pageable, total);
-
-        return ResponseEntity.ok(pageResult);
+        long total = queryFactory.select(blogs.count()).from(blogs).where(query).fetchOne();
+        List<BlogDto> dto = blogList.stream().map(blogMapper::mapDto).toList();
+        if (total == 0) return null;
+        return new PageImpl<>(dto, pageable, total);
     }
-
 
 
     // aktif basif veya  yayından kaldırılmış olan blogları listele
@@ -96,8 +81,10 @@ public class DinamicBlogServices {
     }
 
     //en yeni bloglar
+    // cache at
+    @Cacheable(value = "blog_est_new", key = "#page + '_' + #size")
     @Transactional
-    public ResponseEntity<Page<Blogs>> getNewEstBlogs(int page, int size) {
+    public Page<Blogs> getNewEstBlogs(int page, int size) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QBlogs blogs = QBlogs.blogs;
         Pageable pageable = PageRequest.of(page, size);
@@ -112,7 +99,7 @@ public class DinamicBlogServices {
                 .where(blogs.isActive.eq(ActiveEnum.ACTIVE))
                 .fetchOne();
         Page<Blogs> pageResult = new PageImpl<>(blogs1, pageable, total);
-        return ResponseEntity.ok(pageResult);
+        return pageResult;
 
     }
 

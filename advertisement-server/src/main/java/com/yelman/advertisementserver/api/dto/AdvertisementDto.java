@@ -1,5 +1,7 @@
 package com.yelman.advertisementserver.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.yelman.advertisementserver.model.Category;
 import com.yelman.advertisementserver.model.enums.CurrencyEnum;
 import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
@@ -7,6 +9,7 @@ import com.yelman.advertisementserver.model.enums.StateEnum;
 import com.yelman.advertisementserver.model.enums.StatusEnum;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 @Data
 @Builder
@@ -14,7 +17,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdvertisementDto {
+public class AdvertisementDto implements Serializable {
     private Long id;
     private String title;
     private String description;

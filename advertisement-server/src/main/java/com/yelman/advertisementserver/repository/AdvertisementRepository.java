@@ -23,15 +23,13 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
     default void customize(QuerydslBindings bindings, QAdvertisement advertisement) {
         bindings.bind(advertisement.id).first((NumberPath<Long> path, Long value) -> path.eq(value));
     }
-    Page<Advertisement> findByCategory_IdAndIsActive(
-            long categoryId,
-            ActiveEnum isActive,
-            Pageable pageable
-    );
-    List<Advertisement> findByCategory_Id(Long id);
-
-    List<Advertisement> findByStateAndIsActive(StateEnum state, ActiveEnum isActive);
+    Page<Advertisement> findByStateAndIsActive(StateEnum state, ActiveEnum isActive,
+                                               Pageable pageable);
     List<Advertisement> findBySellerTypeAndIsActive(SellerTypeEnum sellerType, ActiveEnum isActive);
+    List<Advertisement> findByUserStoreId(Long userStore_id);
+    Page<Advertisement> findByUserStore_Id(long userStore_id,
+                                           Pageable pageable);
+    void deleteAllByUserStore_Id(long storeId);
 
 
 }

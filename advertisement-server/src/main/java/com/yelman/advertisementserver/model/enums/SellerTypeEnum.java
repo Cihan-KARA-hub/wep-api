@@ -1,7 +1,9 @@
 package com.yelman.advertisementserver.model.enums;
 
 
-public enum SellerTypeEnum {
+import java.io.Serializable;
+
+public enum  SellerTypeEnum implements Serializable {
     MANUFACTURER("Üretici"),
     ONLINE_RETAILER("Çevrimiçi Satıcı"),
     RETAILER("Perakendeci"),

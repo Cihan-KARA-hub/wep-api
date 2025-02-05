@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,4 +32,6 @@ public class ShoppingPhoto {
     @CurrentTimestamp
     @Column(name = "update_at")
     private OffsetDateTime updateAt;
+    @Column(name = "user_id")
+    private Long userId;
 }

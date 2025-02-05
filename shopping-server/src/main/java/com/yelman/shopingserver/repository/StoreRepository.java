@@ -3,6 +3,7 @@ package com.yelman.shopingserver.repository;
 import com.querydsl.core.types.dsl.StringPath;
 import com.yelman.shopingserver.model.QStore;
 import com.yelman.shopingserver.model.Store;
+import com.yelman.shopingserver.model.User;
 import com.yelman.shopingserver.model.enums.ActiveEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public interface StoreRepository extends JpaRepository<Store, Long>, QuerydslPre
     }
     Page<Store> findById(long id,
                          Pageable pageable);
+    Optional<Store> findByAuthorId(Long author_id);
     Optional<Store> findByStoreName(String storeName);
 
     List<Store> findByIsActive(ActiveEnum isActive);

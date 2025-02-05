@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -122,8 +123,13 @@ public class CommentServices {
         if (!entity.hasContent()) {
             return ResponseEntity.notFound().build();
         }
-        Page<ShopCommentDto> dto = entity.map(commentMapper::entityToDto);
-        return ResponseEntity.ok(dto);
+        Page<ShopCommentDto> dtoPage = entity.map(comment -> {
+            ShopCommentDto dto = commentMapper.entityToDto(comment);
+            dto.setUsers(comment.getUser().getId());
+            dto.setProducts(comment.getProduct().getId());
+            return dto;
+        });
+        return ResponseEntity.ok(dtoPage);
     }
 
     @Transactional
@@ -133,8 +139,13 @@ public class CommentServices {
         if (!entity.hasContent()) {
             return ResponseEntity.notFound().build();
         }
-        Page<ShopCommentDto> dto = entity.map(commentMapper::entityToDto);
-        return ResponseEntity.ok(dto);
+        Page<ShopCommentDto> dtoPage = entity.map(comment -> {
+            ShopCommentDto dto = commentMapper.entityToDto(comment);
+            dto.setUsers(comment.getUser().getId());
+            dto.setProducts(comment.getProduct().getId());
+            return dto;
+        });
+        return ResponseEntity.ok(dtoPage);
     }
 
 

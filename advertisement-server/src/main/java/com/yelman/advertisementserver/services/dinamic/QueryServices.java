@@ -13,6 +13,7 @@ import com.yelman.advertisementserver.model.enums.SellerTypeEnum;
 import com.yelman.advertisementserver.model.enums.StateEnum;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,9 +40,10 @@ public class QueryServices {
         this.entityManager = entityManager;
     }
 
-    //kategorisi verilem  ilanları en yüksekten en asagıya dogru fiyat sıralaması yapar
+    @Cacheable(value = "category_advertisements",
+            key = "#categoryId + '_' + #order + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     @Transactional
-    public ResponseEntity<Page<AdvertisementDto>> getAdvertisements(long categoryId, AdvertisementOrdersEnum order, Pageable pageable) {
+    public Page<AdvertisementDto> getAdvertisements(long categoryId, AdvertisementOrdersEnum order, Pageable pageable) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QAdvertisement advertisement = QAdvertisement.advertisement;
         OrderSpecifier<?> selectedOrder = (order == null || order == AdvertisementOrdersEnum.desc)
@@ -63,12 +65,13 @@ public class QueryServices {
 
         Page<AdvertisementDto> resultPage = new PageImpl<>(dtoList, pageable, total);
 
-        return ResponseEntity.ok(resultPage);
+        return resultPage;
     }
 
-    //istenilen fiyar aralıgına göre sırala
+    @Cacheable(value = "price_range_advertisements",
+            key = "#categoryId + '_' + #minPrice + '_' + #maxPrice + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     @Transactional
-    public ResponseEntity<Page<AdvertisementDto>> getCategoryIdMinMaxPriceBetween(
+    public Page<AdvertisementDto> getCategoryIdMinMaxPriceBetween(
             long category, SellerTypeEnum sellerType, int rate,
             StateEnum state, BigDecimal minPrice,
             BigDecimal maxPrice, Pageable pageable) {
@@ -106,12 +109,10 @@ public class QueryServices {
                 .map(advertisementMapper::toDto)
                 .toList();
 
-        Page<AdvertisementDto> pageResult = new PageImpl<>(dtoList, pageable, total);
+        return new PageImpl<>(dtoList, pageable, total);
 
-        return ResponseEntity.ok(pageResult);
+
     }
-
-
 
 
 }

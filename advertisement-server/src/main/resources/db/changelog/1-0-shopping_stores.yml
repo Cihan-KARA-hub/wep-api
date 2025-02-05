@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       author: user
-      id: 6
+      id: 13
       changes:
         - createTable:
             tableName: shopping_store
@@ -66,7 +66,7 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_hopping_store_users
+                    foreignKeyName: fk_sopping_store_users
                     references: users(id)
               - column:
                   name: country

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       author: user
-      id: 10
+      id: 2
       changes:
         - createTable:
             tableName: blog_categories

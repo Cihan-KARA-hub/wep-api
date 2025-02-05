@@ -5,17 +5,18 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
-
-
 
 @Entity
 @Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,8 +64,9 @@ public class User {
     public String getPassword() {
         return this.password;
     }
-
-
+     public  long getId() {
+        return this.id;
+     }
     public String getUsername() {
         return this.username;
     }

@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 12
+      id: 7
       author: user
       changes:
         - createTable:
@@ -63,6 +63,9 @@ databaseChangeLog:
                     foreignKeyName: fk_advertisement_advertisement_user_store
                     references: advertisement_user_store(id)
               - column:
+                  name: currency
+                  type: VARCHAR(100)
+              - column:
                   name: created_at
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
@@ -88,4 +91,12 @@ databaseChangeLog:
               - column:
                   name: vision_count
                   type: int
+              - column:
+                  name: rate_count
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: is_active
+                  type: VARCHAR(20)
 

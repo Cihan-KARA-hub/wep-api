@@ -1,5 +1,6 @@
 package com.yelman.photoserver.services;
 
+import com.yelman.photoserver.api.dto.Role;
 import com.yelman.photoserver.model.AdvertisementPhoto;
 import com.yelman.photoserver.repository.AdvertisementRepository;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class AdvertisementServices {
 
@@ -23,23 +25,32 @@ public class AdvertisementServices {
     }
 
     @Transactional
-    public ResponseEntity<AdvertisementPhoto> addPhoto(MultipartFile file, Long blogId, String name) throws IOException {
+    public ResponseEntity<AdvertisementPhoto> addPhoto(MultipartFile file, Long blogId, String name, long userId, Role role) throws IOException {
         byte[] imageData = file.getBytes();
-        AdvertisementPhoto photo = new AdvertisementPhoto();
-        photo.setPhotoData(imageData);
-        photo.setAdvertisementId(blogId);
-        photo.setPhotoName(name);
-        AdvertisementPhoto savedPhoto = photoRepository.save(photo);
-        System.out.println("Fotoğraf kaydedildi: ");
-        return ResponseEntity.ok(savedPhoto);
+        if (role == Role.ROLE_OWNER || role == Role.ROLE_ADMIN) {
+            AdvertisementPhoto photo = new AdvertisementPhoto();
+            photo.setPhotoData(imageData);
+            photo.setAdvertisementId(blogId);
+            photo.setPhotoName(name);
+            photo.setUserId(userId);
+            AdvertisementPhoto savedPhoto = photoRepository.save(photo);
+            System.out.println("Fotoğraf kaydedildi: ");
+            return ResponseEntity.ok(savedPhoto);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     public List<AdvertisementPhoto> getAllPhotos() {
         return photoRepository.findAll();
     }
 
-    public void deletePhoto(long id) {
-        photoRepository.deleteById(id);
+    public ResponseEntity<Void> deletePhoto(long id, long userId) {
+        AdvertisementPhoto photo = photoRepository.findByIdAndUserId(id, userId);
+        if (photo == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        photoRepository.delete(photo);
+        return ResponseEntity.ok().build();
     }
 
     public ResponseEntity<byte[]> getById(long photoId) {
@@ -64,4 +75,12 @@ public class AdvertisementServices {
         return ResponseEntity.ok(photos);
     }
 
+    public ResponseEntity<List<AdvertisementPhoto>> getAdverList(Long advertisementId) {
+        List<AdvertisementPhoto> photo = photoRepository.findByAdvertisementId(advertisementId);
+        if (photo.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        }
+        return ResponseEntity.ok(photo);
+    }
 }

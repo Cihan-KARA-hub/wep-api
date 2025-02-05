@@ -29,13 +29,10 @@ public class OfferServices {
     private final AdvertisementRepository advertisementRepository;
     private final EmailServices emailServices;
 
-    public OfferServices(OfferRepository offerRepository,
-                         UserRepository userRepository,
-                         AdvertisementRepository advertisementRepository, EmailServices emailServices) {
+    public OfferServices(OfferRepository offerRepository, UserRepository userRepository, AdvertisementRepository advertisementRepository, EmailServices emailServices) {
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
         this.advertisementRepository = advertisementRepository;
-
         this.emailServices = emailServices;
     }
 
@@ -61,7 +58,8 @@ public class OfferServices {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    private Offer createOffer(User user, Advertisement advertisement, BigDecimal price, CurrencyEnum currency) {
+    @Transactional
+    protected Offer createOffer(User user, Advertisement advertisement, BigDecimal price, CurrencyEnum currency) {
         Offer offer = new Offer();
         offer.setUser(user);
         offer.setPrice(price);
@@ -70,7 +68,8 @@ public class OfferServices {
         return offer;
     }
 
-    private void sendOfferEmails(User user, Advertisement advertisement, BigDecimal price, CurrencyEnum currencyEnum) {
+    @Transactional
+    protected void sendOfferEmails(User user, Advertisement advertisement, BigDecimal price, CurrencyEnum currencyEnum) {
         // Teklif gönderen kullanıcıya mail
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, HH:mm:ss");
         String formattedDate = sdf.format(new Date());
@@ -87,7 +86,6 @@ public class OfferServices {
                 "\n" + "Ürünün fiyatı" + advertisement.getPrice() +
                 "\n" + formattedDate);
         emailServices.sendSimpleMail(userEmail);
-        // İlan sahibine mail
         EmailSendDto ownerEmail = new EmailSendDto();
         ownerEmail.setRecipient(advertisement.getUserStore().getEmail());
         ownerEmail.setSubject("Ürününüze Yeni Bir Teklif Geldi: " + advertisement.getTitle());

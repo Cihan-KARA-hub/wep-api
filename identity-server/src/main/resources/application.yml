@@ -1,4 +1,27 @@
 spring:
+  security:
+    oauth2:
+        client:
+          registration:
+            google:
+              client-id: 415393799733-3jtofkhoc7dd0ronabt9acf7cb4du0t3.apps.googleusercontent.com
+              client-secret: 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
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cihankara632@gmail.com
+    password: ovtz mkng waxy bhvf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+
   cloud:
     config:
       enabled: false
@@ -26,8 +49,10 @@ security:
   jwt:
     token:
       secret-key: ${SECRET_KEY}
+
 server:
   port: 8087
+
 eureka:
   client:
     serviceUrl:
@@ -36,7 +61,8 @@ eureka:
     preferIpAddress: true
 logging:
   level:
-    org.hibernate.SQL: DEBUG  # Hibernate SQL sorgular?n? loglar
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # SQL parametrelerini loglar
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 
 
