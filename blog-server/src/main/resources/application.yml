@@ -23,8 +23,8 @@ spring:
       enabled: false
   datasource:
       url: ${DB_POSTGRES_URL_FIRST}
-      username: ilan_admin
-      password: ilan_admin123
+      username: ${USERNAME}
+      password: ${PASSWORD}
       driver-class-name: org.postgresql.Driver
   servlet:
     multipart:

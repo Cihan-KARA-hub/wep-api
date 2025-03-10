@@ -4,14 +4,14 @@ spring:
         client:
           registration:
             google:
-              client-id: 415393799733-3jtofkhoc7dd0ronabt9acf7cb4du0t3.apps.googleusercontent.com
-              client-secret: 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
+              client-id: ${CLIENT_ID}
+              client-secret: ${CLIENT_SECRET}
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: cihankara632@gmail.com
-    password: ovtz mkng waxy bhvf
+    username: ${USERNAME}
+    password: ${PASSWORD}
     properties:
       mail:
         smtp:
