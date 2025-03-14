@@ -1,2 +1,4 @@
-database diagram
-![Başlıksız Diyagram](https://github.com/user-attachments/assets/47c25172-fb39-44fa-bc07-775d3de5f98f)
+    Database Diagram:
+
+
+![Ekran görüntüsü 2025-03-14 225055](https://github.com/user-attachments/assets/55fa7826-64c8-439d-bd6b-03c17b121541)
